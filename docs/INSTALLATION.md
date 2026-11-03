@@ -46,7 +46,7 @@ source .venv/bin/activate
 python -m pip install --upgrade pip
 pip install -e ".[dev]"
 ```
-This installs all core runtime dependencies (`fastapi`, `uvicorn`, `jinja2`, `python-multipart`, `pydantic`, `pyyaml`, `pillow`, `numpy`, `scipy`, `opencv-python-headless`, `pytesseract`) plus the development/verification suite (`pytest`, `coverage`, `mutmut`, `qrcode`, `httpx`, `ruff`).
+This installs all core runtime dependencies (`fastapi`, `uvicorn`, `jinja2`, `python-multipart`, `pydantic`, `pyyaml`, `pillow`, `numpy`, `scipy`, `opencv-python-headless`, `pytesseract`) plus the development/verification suite (`pytest`, `coverage`, `mutmut`, `qrcode`, `httpx`, `ruff`, `python-docx`).
 
 ### 2.2 Optional Extras (PaddleOCR & ZXing-CPP)
 To install optional deep-learning OCR (`paddleocr`) or the secondary `zxing-cpp` QR decoder:
