@@ -14,7 +14,7 @@
 If you discover a security vulnerability in QRShield — especially any bypass of the **non-execution invariant**, an image parser / decompression-bomb vulnerability, an SSRF/CSRF/authentication bypass in the local FastAPI web server, or a severe false-negative evasion in the core analyzers — please report it responsibly:
 
 1. **Do not open a public GitHub issue** for unpatched security vulnerabilities that could put users of the tool at risk.
-2. Submit a private report via **GitHub Security Advisories** (`Security` tab $\rightarrow$ `Report a vulnerability`) or contact the maintainers listed in [`CITATION.cff`](CITATION.cff) with:
+2. Submit a private report via **GitHub Security Advisories** (`Security` tab $\rightarrow$ `Report a vulnerability`) with:
    - Affected component and file path (e.g., `source/qrshield_core/image/loader.py`, `source/app/main.py`).
    - Minimal proof-of-concept input (e.g., payload string, synthetic QR image, or HTTP request) and environment configuration.
    - Expected behavior vs. observed behavior and potential security impact.

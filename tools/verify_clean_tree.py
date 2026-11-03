@@ -60,8 +60,6 @@ def main() -> int:
             "README.md",
             "CONTRIBUTING.md",
             "SECURITY.md",
-            "CHANGELOG.md",
-            "CITATION.cff",
             ".github/workflows/ci.yml",
             "docs/TUNING_DISCLOSURE.md",
             "qrs_bench_ind/annotations/consensus_ground_truth.jsonl",

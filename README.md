@@ -161,10 +161,8 @@ Every triggered rule emits an `EvidenceItem` assigned to a layer (`payload`, `co
 qrshield/
 ├── README.md                          # Comprehensive project documentation (this file)
 ├── LICENSE                            # MIT License
-├── CITATION.cff                       # Citation File Format metadata
 ├── CONTRIBUTING.md                    # Contribution & pull-request guidelines
 ├── SECURITY.md                        # Vulnerability disclosure & security invariants
-├── CHANGELOG.md                       # Release history & defect closure summary
 ├── DECISIONS.md                       # Architectural Decision Records (ADR-001..ADR-006)
 ├── Makefile                           # One-command verification harness (make verify)
 ├── pyproject.toml                     # Python package metadata, dependencies & tool config
@@ -570,4 +568,3 @@ If you use QRShield or the `QRS-Bench-Ind` benchmark in academic research, pleas
   year    = {2026}
 }
 ```
-Machine-readable citation metadata is also provided in [`CITATION.cff`](CITATION.cff).

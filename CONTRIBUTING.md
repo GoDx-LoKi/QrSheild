@@ -84,5 +84,5 @@ make verify
 
 1. Create a descriptive feature or bugfix branch (`git checkout -b fix/short-description` or `feat/short-description`).
 2. Keep commits atomic and descriptive.
-3. Update relevant documentation under `docs/` and `CHANGELOG.md` if behavior, CLI flags, API routes, or configuration options change.
+3. Update relevant documentation under `docs/` if behavior, CLI flags, API routes, or configuration options change.
 4. Fill out the pull request template (`.github/pull_request_template.md`) and include the output of `make verify`.
