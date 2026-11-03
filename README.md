@@ -570,4 +570,3 @@ If you use QRShield or the `QRS-Bench-Ind` benchmark in academic research, pleas
   year    = {2026}
 }
 ```
-Machine-readable citation metadata is also provided in [`CITATION.cff`](CITATION.cff).
