@@ -1,0 +1,12 @@
+version: "1.0.0"
+defaults: {family: COMMUNICATION, independent_group: sms_structure, layer: payload, applicability: [sms]}
+rules:
+  - {id: SMS-001, title: Malformed SMS destination, category: structure, severity: weak, family: PAYLOAD, independent_group: payload_structure,
+     description: "The destination is empty or not a plausible phone number or short code.",
+     rationale: "Messaging apps will usually reject such values; they may indicate a crafted payload."}
+  - {id: SMS-002, title: Multiple SMS recipients, category: structure, severity: weak,
+     description: "The payload addresses more than one recipient.",
+     rationale: "A single venue QR code rarely needs to message several numbers; may indicate mass-messaging behaviour."}
+  - {id: SMS-003, title: Pre-filled message body, category: structure, severity: info,
+     description: "The QR code pre-fills the message text.",
+     rationale: "Pre-filled text is how SMS QR codes work; the content is analysed separately for sensitive requests."}

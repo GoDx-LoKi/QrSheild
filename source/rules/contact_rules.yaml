@@ -1,0 +1,18 @@
+version: "1.0.0"
+defaults: {family: IDENTITY, independent_group: contact_identity, layer: payload, applicability: [contact]}
+rules:
+  - {id: CON-001, title: Email domain unrelated to stated organisation, category: identity_consistency, severity: weak,
+     description: "The contact's email domain does not appear related to the organisation named in the same contact record.",
+     rationale: "Organisations often use domains that differ from their trading name, so this is a weak internal-consistency observation only. Free mail providers are not treated as a mismatch."}
+  - {id: CON-002, title: Website domain unrelated to stated organisation, category: identity_consistency, severity: weak,
+     description: "The contact's website domain does not appear related to the organisation named in the same record.",
+     rationale: "Weak internal-consistency observation; many businesses use unrelated or third-party hosted sites."}
+  - {id: CON-003, title: Email and website domains differ, category: identity_consistency, severity: weak,
+     description: "The email domain and the website domain in the record belong to different registrable domains.",
+     rationale: "Common for outsourced mail, but also seen in impersonation. Weak on its own."}
+  - {id: CON-004, title: Free email provider used, category: identity_consistency, severity: info,
+     description: "The email address uses a free consumer mail provider.",
+     rationale: "Widely used by small legitimate businesses; reported for completeness only."}
+  - {id: CON-005, title: Phone number format invalid, category: structure, severity: weak, family: PAYLOAD, independent_group: payload_structure,
+     description: "A phone field contains too few or too many digits or unexpected characters.",
+     rationale: "May indicate a typo or a crafted field."}

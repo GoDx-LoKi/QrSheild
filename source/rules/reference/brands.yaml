@@ -1,0 +1,30 @@
+version: "1.0.0"
+# Small reference list of well-known brands and their primary domains, used only for lookalike and
+# expected-domain comparisons. Not exhaustive; verify against official sources before relying on it.
+brands:
+  - {name: PayPal, domains: [paypal.com], category: payments}
+  - {name: Google, domains: [google.com, google.co.in, goo.gle], category: technology}
+  - {name: Microsoft, domains: [microsoft.com, live.com, office.com], category: technology}
+  - {name: Apple, domains: [apple.com, icloud.com], category: technology}
+  - {name: Amazon, domains: [amazon.com, amazon.in, amazon.co.uk], category: retail}
+  - {name: Facebook, aliases: [Meta], domains: [facebook.com, fb.com], category: social}
+  - {name: Instagram, domains: [instagram.com], category: social}
+  - {name: WhatsApp, domains: [whatsapp.com, wa.me], category: messaging}
+  - {name: Telegram, domains: [telegram.org, t.me], category: messaging}
+  - {name: Signal, domains: [signal.org], category: messaging}
+  - {name: Netflix, domains: [netflix.com], category: media}
+  - {name: Dropbox, domains: [dropbox.com], category: technology}
+  - {name: LinkedIn, domains: [linkedin.com], category: social}
+  - {name: Flipkart, domains: [flipkart.com], category: retail}
+  - {name: Paytm, domains: [paytm.com], category: payments}
+  - {name: PhonePe, domains: [phonepe.com], category: payments}
+  - {name: Razorpay, domains: [razorpay.com], category: payments}
+  - {name: HDFC Bank, domains: [hdfcbank.com], category: bank}
+  - {name: ICICI Bank, domains: [icicibank.com], category: bank}
+  - {name: Axis Bank, domains: [axisbank.com], category: bank}
+  - {name: State Bank of India, aliases: [SBI], domains: [sbi.co.in, onlinesbi.sbi], category: bank}
+  - {name: Chase, domains: [chase.com], category: bank}
+  - {name: Wells Fargo, domains: [wellsfargo.com], category: bank}
+  - {name: Bank of America, domains: [bankofamerica.com], category: bank}
+  - {name: DHL, domains: [dhl.com], category: logistics}
+  - {name: FedEx, domains: [fedex.com], category: logistics}

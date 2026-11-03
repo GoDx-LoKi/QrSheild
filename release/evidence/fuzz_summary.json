@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "total_fuzzed_inputs": 100000,
+  "breakdown": {
+    "normalizer_inputs": 75000,
+    "analyzer_inputs": 25000,
+    "ocr_extractor_inputs": 20000,
+    "image_loader_inputs": 5000
+  },
+  "crashes_or_unhandled_exceptions": 0,
+  "crash_samples": [],
+  "elapsed_seconds": 5.975
+}

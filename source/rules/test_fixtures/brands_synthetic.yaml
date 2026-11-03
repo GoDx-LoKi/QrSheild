@@ -1,0 +1,33 @@
+version: "1.0.1"
+# SYNTHETIC test fixtures for legacy ScenarioForge / Counterfactual v3 unit tests.
+# Separated from production rules/reference/ into rules/test_fixtures/ (F-04 remediation).
+# Loaded ONLY when include_synthetic=True (never loaded in production or QRS-Bench-Ind).
+shorteners:
+  dynamic_qr_redirector: [go.example.invalid]
+brands:
+  - {name: ABC Bank, domains: [abcbank.example], category: bank, synthetic: true}
+  - {name: ABC Shop, domains: [abcshop.example], category: retail, synthetic: true}
+  - {name: Greenfield University, domains: [greenfield.example], category: education, synthetic: true}
+  - {name: Sunrise Hotel, aliases: [Sunrise Hospitality], domains: [sunrisehotel.example], category: hospitality, synthetic: true}
+  - {name: BluePeak Finance, domains: [bluepeak-finance.test], category: finance, synthetic: true}
+  - {name: Brightlane Travel, domains: [brightlane-travel.test], category: travel, synthetic: true}
+  - {name: Cedar Grove Clinic, domains: [cedargrove-clinic.test, cedar-grove-clinic.test], category: healthcare, synthetic: true}
+  - {name: Clearview Pharmacy, domains: [clearview-pharmacy.test], category: healthcare, synthetic: true}
+  - {name: Evergreen University, domains: [evergreen-university.test], category: education, synthetic: true}
+  - {name: Greenfield College, domains: [greenfield-college.test], category: education, synthetic: true}
+  - {name: Harborline Bank, domains: [harborline-bank.test], category: bank, synthetic: true}
+  - {name: LumenWorks Media, domains: [lumenworks-media.test], category: media, synthetic: true}
+  - {name: MapleCraft Foods, domains: [maplecraft-foods.test], category: food, synthetic: true}
+  - {name: Meadowline Services, domains: [meadowline-services.test], category: services, synthetic: true}
+  - {name: Northstar Electronics, domains: [northstar-electronics.test], category: retail, synthetic: true}
+  - {name: Oakbridge Insurance, domains: [oakbridge-insurance.test], category: insurance, synthetic: true}
+  - {name: Pinecrest Hotels, domains: [pinecrest-hotels.test], category: hospitality, synthetic: true}
+  - {name: Redstone Market, domains: [redstone-market.test], category: retail, synthetic: true}
+  - {name: Riverstone Events, domains: [riverstone-events.test], category: events, synthetic: true}
+  - {name: SilverLake Transit, domains: [silverlake-transit.test], category: transport, synthetic: true}
+  - {name: Skyline Energy, domains: [skyline-energy.test], category: energy, synthetic: true}
+  - {name: Stonegate Retail, domains: [stonegate-retail.test], category: retail, synthetic: true}
+  - {name: Sunridge Utilities, domains: [sunridge-utilities.test], category: utilities, synthetic: true}
+  - {name: Westport Logistics, domains: [westport-logistics.test], category: logistics, synthetic: true}
+payment_processors: [examplepay]
+email_providers: [freemail.example]

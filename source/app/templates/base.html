@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="htmx-config" content='{"allowEval":false,"includeIndicatorStyles":false,"selfRequestsOnly":true}'>
+  <title>{% block title %}QRShield{% endblock %} · QRShield</title>
+  <link rel="stylesheet" href="/static/css/app.css">
+  <script src="/static/js/htmx.min.js" defer></script>
+  <script src="/static/js/app.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="shell">
+  <aside class="rail">
+    <a class="brand" href="/">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          <rect x="9" y="9" width="6" height="6" rx="1"></rect>
+        </svg>
+      </span>
+      <span class="brand-text">QRShield<small>Context-aware, non-executing QR security</small></span>
+    </a>
+
+    <div class="rail-posture" role="status" aria-label="Engine security posture">
+      <span class="posture-dot" aria-hidden="true"></span>
+      <span>Non-Executing · Local Engine</span>
+    </div>
+
+    <nav aria-label="Primary">
+      <a href="/" {% if page == 'analyze' %}aria-current="page"{% endif %}>
+        <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3" y="3" width="7" height="7"></rect>
+          <rect x="14" y="3" width="7" height="7"></rect>
+          <rect x="14" y="14" width="7" height="7"></rect>
+          <rect x="3" y="14" width="7" height="7"></rect>
+        </svg>
+        <span>Analyze</span>
+      </a>
+      <a href="/research" {% if page == 'research' %}aria-current="page"{% endif %}>
+        <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M9 3h6v4l4 8a3 3 0 0 1-2.7 4.3H7.7A3 3 0 0 1 5 15l4-8V3z"></path>
+          <line x1="8" y1="3" x2="16" y2="3"></line>
+        </svg>
+        <span>Research Tests</span>
+      </a>
+      <a href="/settings" {% if page == 'settings' %}aria-current="page"{% endif %}>
+        <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.09a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.09a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+        <span>Settings</span>
+      </a>
+    </nav>
+
+    <div class="rail-actions no-print">
+      <button type="button" class="theme-btn" data-action="toggle-theme" aria-label="Toggle color theme">
+        <span>Theme</span>
+        <span class="mono" data-theme-label>Light Mode</span>
+      </button>
+      <div class="foot">
+        <strong>QRShield v{{ version }}</strong><br>
+        Static, pre-action inspection. Decoded payloads are never opened, dialed, or executed.
+      </div>
+    </div>
+  </aside>
+  <main id="main">{% block content %}{% endblock %}</main>
+</div>
+</body>
+</html>

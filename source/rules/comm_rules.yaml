@@ -1,0 +1,16 @@
+version: "1.0.0"
+defaults: {family: COMMUNICATION, independent_group: sensitive_request, layer: payload, applicability: [sms, email, contact, payment, plain_text]}
+rules:
+  - {id: COM-001, title: Request to disclose a credential or one-time code, category: sensitive_request, severity: strong,
+     description: "Pre-filled text asks the user to send, share or enter an OTP, PIN, password, CVV or similar secret.",
+     rationale: "One-time codes and PINs authenticate the user's own actions and are not meant to be handed to a third party. A QR-delivered message asking for one matches a recognised social-engineering pattern, although a legitimate service could in principle use such wording.",
+     recommendation: "Do not send one-time codes, PINs or passwords. Contact the organisation through a channel you already trust."}
+  - {id: COM-002, title: Request for payment or financial details, category: sensitive_request, severity: meaningful,
+     description: "Pre-filled text asks for a payment, a transfer, or account/card details.",
+     rationale: "Financial requests in pre-filled messages are high-impact if the sender is not who the context implies; they are also normal for genuine ordering and billing flows."}
+  - {id: COM-003, title: Request for personal identity information, category: sensitive_request, severity: meaningful,
+     description: "Pre-filled text asks for identity numbers, date of birth, address or similar personal data.",
+     rationale: "Identity data enables account takeover and fraud; the request is evaluated against the deployment context."}
+  - {id: COM-004, title: Urgency or pressure language, category: social_engineering, severity: weak, independent_group: urgency,
+     description: "Pre-filled text uses urgency or threat wording (for example 'urgent', 'within 24 hours', 'account blocked').",
+     rationale: "Urgency is a common pressure technique but is also used in routine reminders; weak on its own."}

@@ -1,0 +1,25 @@
+version: "1.0.0"
+# Heuristic reference lists. Not exhaustive and not authoritative; review before relying on them.
+shorteners:
+  url_shortener: [bit.ly, tinyurl.com, t.co, goo.gl, ow.ly, is.gd, buff.ly, rebrand.ly, cutt.ly, shorturl.at, tiny.cc, rb.gy, lnkd.in, t.ly, v.gd, s.id, bitly.ws, tr.im, shorte.st, adf.ly]
+  dynamic_qr_redirector: [qrco.de, qr.ae, l.ead.me, qrcodes.pro, scan.page, qrfy.com]
+email_providers: [gmail.com, googlemail.com, yahoo.com, yahoo.co.in, yahoo.co.uk, outlook.com, hotmail.com, live.com, msn.com, icloud.com, me.com, proton.me, protonmail.com, aol.com, rediffmail.com, gmx.com, mail.com]
+payment_processors: [razorpay, paytm, phonepe, billdesk, cashfree, payu, ccavenue, instamojo, stripe, square, paypal, adyen, worldline, pinelabs, mswipe, bharatpe, juspay, easebuzz, "google pay", gpay]
+thresholds:
+  large_amount: {INR: 10000, USD: 500, EUR: 500, GBP: 400, default: 1000}
+  max_url_length: 1000
+  max_payload_length: 2000
+  max_query_params: 10
+  max_subdomain_depth: 3
+url_keywords:
+  sensitive_path: [login, signin, sign-in, logon, verify, verification, validate, recover, recovery, reset, account, secure, update, confirm, password, kyc, otp, wallet, billing, payment, pay, checkout, authenticate, authorize, authorise, custody, mandate]
+  login_path: [login, signin, sign-in, logon, verify, verification, validate, recover, recovery, reset, password, kyc, otp, authenticate, authorize, authorise]
+  payment_path: [pay, payment, checkout, billing, wallet, transfer, request, custody, mandate, allowance]
+  sensitive_param: [token, access_token, id_token, session, sessionid, sid, password, passwd, pwd, pass, secret, apikey, api_key, key, auth, credential, credentials, otp, pin, passcode, code, signature, grant_custody, custody, allowance, approve, delegate, mandate, autopay, private_key, seed, mnemonic, session_key, callback_url, redirect_uri, webhook]
+  redirect_param: [url, redirect, redirect_uri, redirect_url, return, return_url, next, continue, dest, destination, goto, target, returnTo, callback]
+  download_ext: [apk, exe, msi, dmg, pkg, scr, bat, jar]
+payment_app_schemes: [phonepe, gpay, tez, paytmmp, bhim, upi, paytm, amazonpay]
+entity_lexicon:
+  legal_suffixes: [pvt, private, ltd, limited, llp, llc, inc, incorporated, corp, corporation, co, company, plc, gmbh, sa, pte, opc, ltda, bv, ag]
+  generic_descriptors: [hotel, hotels, resort, resorts, inn, lodge, restaurant, restaurants, cafe, coffee, bar, bakery, kitchen, foods, food, shop, shops, store, stores, mart, supermarket, salon, spa, clinic, hospital, hospitals, pharmacy, university, college, school, institute, bank, office, hospitality, services, service, solutions, enterprises, enterprise, trading, traders, trade, group, industries, infotech, technologies, technology, tech, systems, global, international, india, the, and, of, official, support, helpdesk, payments, payment, retail, wifi, guest]
+  wifi_generic: [wifi, wi, fi, guest, free, public, net, network, internet, hotspot, ap, 5g, 2g, 24ghz, 5ghz, staff, customer, customers, visitor, visitors, lan, wlan, secure, official, open, private, corp, corporate, student, students]

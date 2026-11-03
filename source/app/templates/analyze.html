@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% from "_macros.html" import chip %}
+{% block title %}Analyze{% endblock %}
+{% block content %}
+<div class="page-header">
+  <span class="eyebrow">Pre-Action Cross-Modal Inspection</span>
+  <h1>Analyze a QR code before performing the encoded action</h1>
+  <p class="lede">Upload one photo that shows the QR code <em>and</em> its surroundings (venue name, instructions, amount). QRShield decodes the payload, reads the visible context, and checks whether the two are consistent. Nothing the code encodes is opened, joined, paid, sent or launched.</p>
+</div>
+
+<div class="safety">
+  <b>Safe analysis</b>
+  <span>Static, pre-action only. Decoded URLs are never fetched or followed. Your image and context stay on this machine unless you explicitly opt in to an external report lookup.</span>
+</div>
+
+<ol class="workflow-steps no-print" aria-label="Analysis workflow steps">
+  <li class="workflow-step active" id="step-1">
+    <span class="step-num">1</span>
+    <span><strong>Upload &amp; Decode</strong><br><span class="hint">10-pass QR decode + 2-pass local OCR</span></span>
+  </li>
+  <li class="workflow-step" id="step-2">
+    <span class="step-num">2</span>
+    <span><strong>Review Context &amp; Payload</strong><br><span class="hint">Confirm, edit, or ignore OCR suggestions</span></span>
+  </li>
+  <li class="workflow-step" id="step-3">
+    <span class="step-num">3</span>
+    <span><strong>Verdict &amp; Evidence Ledger</strong><br><span class="hint">Explainable L0–L3 qualitative assessment</span></span>
+  </li>
+</ol>
+
+<form id="upload" class="upload-panel" hx-post="/analyze/prepare" hx-encoding="multipart/form-data" hx-target="#workspace" hx-swap="innerHTML" hx-indicator="#up-ind">
+  <div class="dropzone">
+    <span class="dropzone-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+        <polyline points="17 8 12 3 7 8"></polyline>
+        <line x1="12" y1="3" x2="12" y2="15"></line>
+      </svg>
+    </span>
+    <label for="image">QR image — drag and drop a photo here, or browse from disk</label>
+    <p class="hint">Capture both the QR matrix and surrounding signage (business name, purpose, payment amount, or SSID) for cross-modal consistency checks.</p>
+    <input id="image" name="image" type="file" accept="image/png,image/jpeg,image/webp,image/bmp,image/gif" required>
+    <div id="file-preview" class="file-preview-pill hidden" aria-live="polite"></div>
+    <div class="hint">PNG, JPEG, WEBP, BMP or GIF · up to {{ max_mb }} MB</div>
+  </div>
+
+  <div class="upload-footer">
+    <div class="family-pills" aria-label="Supported payload families">
+      <span class="hint">Supported schemes:</span>
+      {{ chip('URL') }}{{ chip('Wi-Fi') }}{{ chip('UPI / Payment') }}{{ chip('vCard / MeCard') }}{{ chip('SMS') }}{{ chip('Email') }}{{ chip('Deep Link') }}{{ chip('Plain Text') }}
+    </div>
+    <div>
+      <button type="submit">Analyze QR image</button>
+      <span id="up-ind" class="htmx-indicator">Reading image…</span>
+    </div>
+  </div>
+</form>
+
+<div id="workspace" aria-live="polite"></div>
+<div id="results" aria-live="polite"></div>
+{% endblock %}

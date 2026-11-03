@@ -1,0 +1,24 @@
+version: "1.0.0"
+defaults: {family: APPLICATION, independent_group: application_target, layer: payload, applicability: [deep_link]}
+rules:
+  - {id: DL-001, title: Unverified custom URI scheme, category: application, severity: weak,
+     description: "The scheme is a custom scheme that is not in the reference registry of known applications.",
+     rationale: "Custom schemes are not ownership-verified, so any installed app can claim them. Unknown does not mean malicious."}
+  - {id: DL-002, title: Link requests a sensitive in-app operation, category: operation, severity: weak,
+     description: "The path, host or parameters indicate login, account recovery, device linking, payment or similar.",
+     rationale: "These operations are legitimate in the right place; the concern is whether the context justifies them (assessed by the context checks and action sensitivity)."}
+  - {id: DL-003, title: Sensitive parameters in deep link, category: parameters, severity: weak, independent_group: deeplink_parameters,
+     description: "Parameters carry token-, key- or secret-like names.",
+     rationale: "Deep links often carry one-time tokens for legitimate hand-offs; reported as an observation."}
+  - {id: DL-004, title: Excessive parameters, category: parameters, severity: weak, independent_group: deeplink_parameters,
+     description: "The deep link carries an unusually large number of parameters.",
+     rationale: "May indicate crafted input or obfuscation."}
+  - {id: DL-005, title: Intent with browser fallback URL, category: operation, severity: weak,
+     description: "An Android intent specifies a fallback URL that opens in a browser.",
+     rationale: "Fallback URLs can send users to an external page when the app is not installed; used legitimately for store pages."}
+  - {id: DL-006, title: Authenticator secret embedded, category: parameters, severity: weak, independent_group: deeplink_parameters,
+     description: "An otpauth link provisions a one-time-password secret (the value is redacted).",
+     rationale: "Expected for authenticator enrolment; unexpected on public signage."}
+  - {id: DL-007, title: Known application target, category: application, severity: info,
+     description: "The scheme maps to an application in the reference registry.",
+     rationale: "Descriptive: names the app that would be launched so it can be compared with the context."}

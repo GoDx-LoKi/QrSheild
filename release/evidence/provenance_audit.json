@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "checked_annotation_files": {
+    "qrs_bench_ind/annotations/consensus_ground_truth.jsonl": 1080
+  },
+  "detected_provenances": [
+    "author_assigned"
+  ],
+  "error_count": 0,
+  "errors": []
+}

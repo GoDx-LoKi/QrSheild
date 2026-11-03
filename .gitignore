@@ -1,0 +1,37 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+
+# Packaging & build outputs
+build/
+dist/
+*.egg-info/
+source/*.egg-info/
+
+# Pytest / coverage / mutation / linter caches
+.pytest_cache/
+.coverage
+htmlcov/
+.mutmut-cache/
+.ruff_cache/
+.mypy_cache/
+
+# Runtime artifacts & local secrets
+.env
+source/.env
+source/artifacts/
+artifacts/
+*.tmp
+*.log
+
+# OS / editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

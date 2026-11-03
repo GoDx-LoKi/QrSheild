@@ -1,0 +1,52 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "qrshield"
+version = "1.0.0"
+description = "QRShield — Context-aware, non-executing security analysis for QR codes across 8 payload families"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.92.0",
+    "uvicorn>=0.17.6",
+    "jinja2>=3.1.5",
+    "python-multipart>=0.0.5",
+    "pydantic>=1.10.4",
+    "pyyaml>=6.0",
+    "pillow>=10.2.0",
+    "numpy>=1.26.4",
+    "scipy>=1.11.4",
+    "opencv-python-headless>=4.11.0",
+    "pytesseract>=0.3.13",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest==8.3.4",
+    "coverage==7.6.10",
+    "mutmut==2.5.1",
+    "qrcode==7.4.2",
+    "httpx==0.28.1",
+    "ruff==0.9.2",
+]
+ocr = [
+    "paddlepaddle>=3.3.1,<4.0.0",
+    "paddleocr>=3.7.0,<4.0.0",
+]
+decoder = [
+    "zxing-cpp==2.2.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["source"]
+include = ["qrshield_core*", "app*", "evaluation*"]
+
+[tool.pytest.ini_options]
+testpaths = ["source/tests"]
+pythonpath = ["source"]
+addopts = "-q --disable-warnings"
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"

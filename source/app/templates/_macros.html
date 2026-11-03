@@ -1,0 +1,32 @@
+{% macro sev(s) %}<span class="sev sev-{{ s }}" aria-hidden="true"><i></i><i></i><i></i></span><span class="sev-label">{{ s }}</span>{% endmacro %}
+{% macro chip(text, kind='') %}<span class="chip {{ kind }}">{{ text }}</span>{% endmacro %}
+{% macro scale(level) %}
+<ol class="scale" aria-label="Qualitative assessment scale (ordinal, not a score)">
+  {% for l in level_order %}<li class="{{ 'on' if l == level else '' }}">{{ level_names[l] }}</li>{% endfor %}
+</ol>
+{% endmacro %}
+{% macro viewer(res, uid) %}
+{# Image with toggleable evidence layers. Only numeric coordinates are written into attributes. #}
+{% set w = res.input.width %}{% set h = res.input.height %}
+{% if res.input.image_id and w and h %}
+<div class="viewer" id="viewer-{{ uid }}">
+  <svg viewBox="0 0 {{ w }} {{ h }}" role="img" aria-label="Uploaded image with detected QR code, OCR regions and context candidates highlighted">
+    <image href="/image/{{ res.input.image_id }}" x="0" y="0" width="{{ w }}" height="{{ h }}"/>
+    <g data-layer-group="ocr" class="hidden">
+      {% for b in res.ocr.text_blocks %}{% if b.bbox %}<polygon class="ocr-box" points="{% for p in b.bbox %}{{ p[0] }},{{ p[1] }} {% endfor %}"/>{% endif %}{% endfor %}
+    </g>
+    <g data-layer-group="ctx">
+      {% if res.context %}{% for a in res.context.attributes %}{% if a.bbox %}<polygon class="ctx-box" points="{% for p in a.bbox %}{{ p[0] }},{{ p[1] }} {% endfor %}"/>{% endif %}{% endfor %}{% endif %}
+    </g>
+    <g data-layer-group="qr">
+      {% if res.qr.bbox %}<polygon class="qr-box sel" points="{% for p in res.qr.bbox %}{{ p[0] }},{{ p[1] }} {% endfor %}"/>{% endif %}
+    </g>
+  </svg>
+  <div class="toggles no-print">
+    <label><input type="checkbox" data-layer="qr" checked> Selected QR region</label>
+    <label><input type="checkbox" data-layer="ocr"> OCR regions</label>
+    <label><input type="checkbox" data-layer="ctx" checked> Context used</label>
+  </div>
+</div>
+{% endif %}
+{% endmacro %}

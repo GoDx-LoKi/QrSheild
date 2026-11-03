@@ -1,0 +1,19 @@
+version: "1.0.0"
+defaults: {family: NETWORK, independent_group: network_security, layer: payload, applicability: [wifi]}
+rules:
+  - {id: WIFI-001, title: Open network (no authentication), category: network_security, severity: weak,
+     description: "The Wi-Fi payload declares no authentication (nopass or empty type).",
+     rationale: "Open networks give no link-layer protection against eavesdropping, which is a security warning. Open guest networks are common and not malicious in themselves.",
+     recommendation: "If you connect, avoid sensitive activity or use a VPN."}
+  - {id: WIFI-002, title: Weak or legacy encryption, category: network_security, severity: weak,
+     description: "The declared authentication is WEP or another legacy mode.",
+     rationale: "WEP is cryptographically broken. This indicates weak configuration; it is not evidence of malicious intent."}
+  - {id: WIFI-003, title: Hidden network, category: network_security, severity: weak, independent_group: network_stealth,
+     description: "The payload flags the network as hidden.",
+     rationale: "Hidden SSIDs are used legitimately but also make the device broadcast probe requests for the network name."}
+  - {id: WIFI-004, title: Password embedded in QR payload, category: credential_exposure, severity: info, independent_group: credential_exposure,
+     description: "A Wi-Fi password is present in the payload (the value itself is redacted by QRShield).",
+     rationale: "Embedding the password is how Wi-Fi QR codes work. It is only relevant if the deployment context suggests the network should not be shared publicly."}
+  - {id: WIFI-005, title: Malformed or unusual SSID, category: structure, severity: weak, family: PAYLOAD, independent_group: payload_structure,
+     description: "The SSID is empty, longer than 32 bytes, or contains control characters.",
+     rationale: "The 802.11 SSID limit is 32 bytes; violations indicate a malformed or crafted payload."}

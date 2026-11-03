@@ -1,0 +1,56 @@
+version: "1.0.0"
+defaults: {family: IDENTITY, independent_group: identity_vs_context, layer: context, applicability: [url, wifi, payment, contact, sms, email, deep_link]}
+rules:
+  - {id: CTX-001, title: Identity mismatch, category: context_consistency, severity: meaningful, mismatch_type: identity mismatch,
+     description: "The organisation named inside the payload differs from the organisation identified by the surrounding context.",
+     rationale: "A QR code presented by one organisation but naming another is a contextual inconsistency. It is a risk indicator, not proof of fraud: affiliates, parents, franchises and service providers produce the same pattern.",
+     recommendation: "Confirm with the venue or organisation that the named entity is theirs."}
+  - {id: CTX-002, title: Payment recipient does not match the displayed business, category: context_consistency, severity: meaningful, mismatch_type: recipient mismatch,
+     description: "The payee name in the payment payload does not match the business identified by the context.",
+     rationale: "Recipient/merchant mismatch is the central contextual signal of the QRShield framework. Legitimate explanations include payment processors, legal-entity names, parent companies, franchises and owner accounts.",
+     recommendation: "Verify the recipient through a trusted channel (ask staff, check the printed receipt) before paying."}
+  - {id: CTX-003, title: Destination domain does not correspond to the identified organisation, category: context_consistency, severity: meaningful, mismatch_type: domain mismatch,
+     description: "The URL host is not related to the organisation (or to the official domain) identified by the context.",
+     rationale: "A page that presents itself as organisation X but is hosted on an unrelated domain is a classic impersonation pattern. Many legitimate organisations also use third-party or differently named domains, so severity depends on the confidence of the comparison and the type of organisation.",
+     recommendation: "Open the organisation's website by typing its known address instead of using the QR code."}
+  - {id: CTX-004, title: Contact destination does not correspond to the identified organisation, category: context_consistency, severity: meaningful, mismatch_type: destination mismatch,
+     description: "An email domain or phone number does not correspond to the organisation (or visible contact details) in the context.",
+     rationale: "Contact details that lead somewhere other than the organisation shown can redirect enquiries to a third party. Outsourced support and personal addresses are legitimate exceptions.",
+     recommendation: "Compare the address or number with the organisation's official contact page."}
+  - {id: CTX-005, title: Action does not fit the stated purpose, category: context_consistency, severity: meaningful, family: CONTEXT, independent_group: purpose_vs_action, mismatch_type: action mismatch,
+     description: "The action the payload would perform is not among the actions normally expected for the purpose stated in the context.",
+     rationale: "A code presented as 'view menu' that links a device or requests a payment performs a different action than the user is led to expect. Purpose wording is read by a keyword lexicon and can be ambiguous.",
+     recommendation: "Do not proceed unless you intended the action described in the payload."}
+  - {id: CTX-006, title: Wi-Fi network name does not match the venue, category: context_consistency, severity: meaningful, mismatch_type: network mismatch,
+     description: "The SSID in the payload is not related to the venue or network name in the context.",
+     rationale: "A network name unrelated to the venue is consistent with an impersonated access point, but venues also run networks under managed-provider or generic names.",
+     recommendation: "Ask the venue for the exact network name before connecting."}
+  - {id: CTX-007, title: Amount differs from displayed amount, category: context_consistency, severity: meaningful, family: TRANSACTION, independent_group: amount_vs_context, mismatch_type: amount mismatch,
+     description: "The amount encoded in the payload differs from the amount shown in the context.",
+     rationale: "A payer who trusts the displayed amount may authorise a different one. Rounding, taxes and tips can explain small differences.",
+     recommendation: "Check the amount in your payment app before confirming."}
+  - {id: CTX-008, title: Application target does not match the identified service, category: context_consistency, severity: meaningful, family: APPLICATION, independent_group: application_vs_context, mismatch_type: application-target mismatch,
+     description: "The application launched by the deep link does not correspond to the organisation or service identified by the context.",
+     rationale: "Launching an unrelated application for a venue or service is an unexpected hand-off; some venues legitimately use third-party apps.",
+     recommendation: "Install apps only from the official store page the organisation links to directly."}
+  - {id: CTX-009, title: Payment payload where money is expected to be received, category: context_consistency, severity: meaningful, family: CONTEXT, independent_group: purpose_vs_action, mismatch_type: purpose mismatch,
+     description: "The context describes receiving money (for example a refund or prize) but the payload is an instruction to pay.",
+     rationale: "Receiving funds does not normally require authorising a payment. This direction reversal is a recognised scam pattern, though collect-request flows can look similar.",
+     recommendation: "Never approve a payment to receive money. Ask the organisation how refunds are issued."}
+  - {id: CTX-010, title: Message destination differs from the contact shown, category: context_consistency, severity: meaningful, family: COMMUNICATION, independent_group: communication_vs_context, mismatch_type: communication-target mismatch,
+     description: "The SMS number or email address differs from the contact details visible in the context.",
+     rationale: "Messages would reach someone other than the contact the user can see. Departments may legitimately use different numbers or addresses.",
+     recommendation: "Compare the destination with the contact details published by the organisation."}
+  - {id: CTX-011, title: Identity relationship ambiguous, category: context_consistency, severity: weak, mismatch_type: ambiguous identity,
+     description: "Names are lexically related or the recipient resembles a known intermediary, so the relationship cannot be classified as a match or mismatch.",
+     rationale: "Ambiguity is reported instead of being turned into a verdict. Similar names can be benign variations or look-alikes; the matcher does not infer ownership from lexical similarity.",
+     recommendation: "Verify the relationship if the action is sensitive."}
+  - {id: CTX-012, title: Insufficient context, category: context_consistency, severity: info, family: CONTEXT, independent_group: context_availability, mismatch_type: insufficient context,
+     description: "No usable context was available for this comparison (missing, ambiguous or low-confidence).",
+     rationale: "Missing context means identity consistency was not assessed. It is neither evidence of risk nor of safety."}
+  - {id: CTX-013, title: Network security does not fit the described network, category: context_consistency, severity: meaningful, family: NETWORK, independent_group: network_expectation, mismatch_type: network mismatch,
+     description: "The context describes an official, secure, staff or corporate network but the payload declares an open or legacy-encrypted network.",
+     rationale: "Official networks are normally protected; an open network under that description is consistent with an impersonated access point, although open guest networks exist."}
+  - {id: CTX-014, title: Credentials for an internal network in a public context, category: context_consistency, severity: meaningful, family: NETWORK, independent_group: network_expectation, mismatch_type: purpose mismatch,
+     description: "The context describes a private, staff or internal network but is presented publicly while the QR code embeds the network credentials.",
+     rationale: "Publishing credentials for an internal network defeats its access control. The inference depends on context wording and context type and may be wrong."}

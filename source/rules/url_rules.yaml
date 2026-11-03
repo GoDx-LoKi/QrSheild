@@ -1,0 +1,66 @@
+version: "1.0.0"
+defaults: {family: DESTINATION, independent_group: destination_anomaly, layer: payload, applicability: [url, payment, sms, email, contact]}
+rules:
+  - {id: URL-001, title: Unencrypted transport (HTTP), category: transport, severity: weak,
+     description: "The encoded URL uses HTTP rather than HTTPS.",
+     rationale: "HTTP offers no transport confidentiality or server authentication. Many benign legacy pages still use it, so on its own it is a weak indicator.",
+     recommendation: "Avoid entering credentials or payment details on an HTTP page."}
+  - {id: URL-002, title: Public IP address used as host, category: host, severity: meaningful,
+     description: "The host is a raw public IP address instead of a domain name.",
+     rationale: "Legitimate public services normally use domain names; raw IP hosts hide the operating organisation and are common in throw-away infrastructure. Some benign devices and test servers also use them."}
+  - {id: URL-003, title: URL shortener or redirection service, category: host, severity: weak,
+     description: "The host is on the versioned list of URL-shortening or redirection services.",
+     rationale: "The final destination cannot be seen without resolving the redirect, which QRShield deliberately does not do. Shorteners are widely used legitimately, including by dynamic-QR services.",
+     recommendation: "Prefer a QR code that shows the real destination before opening it."}
+  - {id: URL-004, title: Lookalike of a known brand domain, category: host, severity: meaningful,
+     description: "The registrable domain resembles a known brand domain through homoglyph substitution or a one/two-character edit.",
+     rationale: "Lexical similarity is evidence of possible impersonation but does not establish ownership either way. The comparison uses a small versioned reference list, not an authoritative registry."}
+  - {id: URL-005, title: Brand name embedded in a different domain, category: host, severity: meaningful,
+     description: "A known brand name appears in a subdomain or domain label while the registrable domain belongs to someone else.",
+     rationale: "Embedding a brand name in an unrelated domain (for example brand.secure-login.example) is a common impersonation pattern, but affiliates and resellers sometimes do this legitimately."}
+  - {id: URL-006, title: Credential-like query parameter, category: query, severity: weak,
+     description: "The query string contains parameter names such as token, session, key, password or otp.",
+     rationale: "These names describe what the parameter may carry. Many legitimate links carry session or tracking tokens, so the observation is reported without implying malice."}
+  - {id: URL-007, title: Credentials embedded in URL, category: host, severity: meaningful,
+     description: "The URL contains a userinfo component (user:pass@host).",
+     rationale: "Userinfo in web URLs is rare and is used to make the visible text look like a trusted domain while the real host follows the @ sign."}
+  - {id: URL-008, title: Internationalised (punycode) host, category: host, severity: weak,
+     description: "The host contains punycode (xn--) labels or non-ASCII characters.",
+     rationale: "IDN domains are legitimate for many languages but can also be used for visually confusable names."}
+  - {id: URL-009, title: Mixed scripts in host label, category: host, severity: meaningful,
+     description: "A host label mixes characters from more than one Unicode script.",
+     rationale: "Mixing scripts (for example Latin with Cyrillic) is a classic visual-spoofing technique and is uncommon in legitimate names."}
+  - {id: URL-010, title: Excessive subdomain depth, category: host, severity: weak,
+     description: "The host has an unusually large number of subdomain labels.",
+     rationale: "Deep subdomain chains can push the real registrable domain out of view on small screens."}
+  - {id: URL-011, title: Path suggests login, verification or payment, category: path, severity: weak,
+     description: "The URL path contains keywords such as login, verify, recover, account or payment.",
+     rationale: "Such paths are normal on real sites; they matter mainly because the action may involve sensitive data entry (see action sensitivity)."}
+  - {id: URL-012, title: Excessive or encoded parameters, category: query, severity: weak,
+     description: "The URL has many query parameters or very long encoded values.",
+     rationale: "Unusual parameter structure can carry tracking or obfuscated redirect data, but also appears in ordinary campaign links."}
+  - {id: URL-013, title: Dangerous or script URI scheme, category: transport, severity: meaningful,
+     description: "The scheme is javascript:, data:, file: or vbscript:.",
+     rationale: "These schemes are not ordinary web destinations and can trigger local or script behaviour in some scanners. QRShield treats them strictly as text.",
+     recommendation: "Do not open this payload. Use a scanner that shows content as text."}
+  - {id: URL-014, title: Non-standard port, category: host, severity: weak,
+     description: "The URL specifies a port other than 80 or 443.",
+     rationale: "Non-standard ports are common for internal tools and test servers and occasionally for ad-hoc malicious hosting."}
+  - {id: URL-015, title: Scheme missing, category: transport, severity: info,
+     description: "The payload is a bare domain or path without a scheme.",
+     rationale: "Scanners differ in how they complete the scheme; QRShield analyses the host but does not assume HTTPS."}
+  - {id: URL-016, title: Embedded redirect parameter, category: query, severity: weak,
+     description: "A query parameter value is itself a URL (for example url= or redirect=).",
+     rationale: "Open-redirect style parameters can hide the final destination, although they are also used by legitimate single-sign-on and payment flows."}
+  - {id: URL-017, title: Very long URL, category: structure, severity: weak,
+     description: "The URL exceeds the configured length threshold.",
+     rationale: "Very long URLs can hide the meaningful part of the address from users."}
+  - {id: URL-018, title: Private or special-purpose host, category: host, severity: meaningful,
+     description: "The host is localhost, a private, loopback, link-local or reserved address.",
+     rationale: "Such hosts are not reachable as public services; a public QR pointing to one is either a mistake or an attempt to reach a device on the scanning user's own network."}
+  - {id: URL-019, title: Obfuscated numeric IP host, category: host, severity: meaningful,
+     description: "The host is an IP written as a single integer, hexadecimal or octal form.",
+     rationale: "Alternative IP notations have no ordinary use in public links and are used to evade simple string filters."}
+  - {id: URL-021, title: Non-web URI scheme, category: transport, severity: weak,
+     description: "The scheme is a non-web scheme such as ftp.",
+     rationale: "Unencrypted or unusual transports are uncommon for QR-delivered content."}

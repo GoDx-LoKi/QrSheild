@@ -1,0 +1,31 @@
+<div id="run-out" class="panel">
+<div class="sec-h">
+  <h3>Run <span class="mono">{{ progress.run_id }}</span> — {{ 'complete' if progress.status == 'done' else 'finished with errors' }}</h3>
+  <span class="chip {{ 'ok' if progress.status == 'done' else 'err' }}">{{ progress.status }}</span>
+</div>
+{% if progress.error_message %}<div class="msg" role="alert">{{ progress.error_message }}</div>{% endif %}
+<div class="stat-grid">
+  <div class="stat-card">
+    <div class="stat-val">{{ progress.suite }}</div>
+    <div class="stat-lbl">Suite</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-val">{{ progress.total }}</div>
+    <div class="stat-lbl">Total Items</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-val">{{ progress.completed }}</div>
+    <div class="stat-lbl">Completed</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-val">{{ progress.failed }}</div>
+    <div class="stat-lbl">Failed</div>
+  </div>
+</div>
+<h4>Generated Artifacts</h4>
+<ul>
+{% for link in artifact_links %}
+  <li><a href="{{ link.url }}" class="mono">{{ link.name }}</a></li>
+{% endfor %}
+</ul>
+</div>

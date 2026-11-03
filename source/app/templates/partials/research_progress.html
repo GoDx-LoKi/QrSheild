@@ -1,0 +1,30 @@
+<div id="run-out" class="panel run-progress" aria-live="polite"
+  {% if status == 'running' %}
+  hx-get="/research/progress/{{ run_id }}"
+  hx-target="#run-out"
+  hx-swap="outerHTML"
+  hx-trigger="every 3s"
+  {% endif %}>
+
+<div class="sec-h">
+  <h3>Run <span class="mono">{{ run_id }}</span> &mdash; {{ suite }} test</h3>
+  <span class="chip {{ 'ok' if status == 'done' else ('err' if status == 'error' else '') }}">{{ status }}</span>
+</div>
+
+{% if status == 'running' %}
+  <p class="hint"><span class="htmx-indicator running-badge">Running…</span></p>
+  {% if total > 0 %}
+  <progress class="progress-native" value="{{ completed }}" max="{{ total }}" aria-label="Benchmark run progress"></progress>
+  {% endif %}
+  <dl class="kv">
+    <dt>Completed</dt><dd><strong>{{ completed }}</strong> of {{ total }}</dd>
+    <dt>Failed</dt><dd>{{ failed }}</dd>
+    <dt>Remaining</dt><dd>{{ remaining }}</dd>
+    {% if current_item %}<dt>Current</dt><dd class="mono">{{ current_item }}</dd>{% endif %}
+  </dl>
+{% elif status == 'done' %}
+  <p class="hint ok">Run complete. See results below.</p>
+{% elif status == 'error' %}
+  <p class="hint err">Run encountered an error. Check run artifacts for details.</p>
+{% endif %}
+</div>

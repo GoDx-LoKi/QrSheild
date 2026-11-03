@@ -1,0 +1,21 @@
+version: "1.0.0"
+defaults: {family: PAYLOAD, independent_group: payload_structure, layer: payload, applicability: [plain_text, url, sms, email, contact, deep_link]}
+rules:
+  - {id: TXT-001, title: Hidden or control characters present, category: structure, severity: weak,
+     description: "The payload contains zero-width, bidirectional-override or control characters.",
+     rationale: "Invisible characters can disguise text or reverse its displayed order."}
+  - {id: TXT-002, title: Embedded indicator found in text, category: structure, severity: info,
+     description: "The text contains a URL, email address or phone number.",
+     rationale: "Descriptive: embedded indicators are analysed with the matching analyzer."}
+  - {id: TXT-003, title: Oversized payload, category: structure, severity: weak,
+     description: "The payload is longer than the configured length threshold.",
+     rationale: "Unusually large payloads are rare for ordinary signage."}
+  - {id: TXT-004, title: Payload not recognised as a supported action, category: classification, severity: info,
+     description: "The payload does not match a supported structured format and is treated as plain text.",
+     rationale: "Unknown does not mean safe; it means QRShield has no type-specific checks for it."}
+  - {id: TXT-005, title: Call-initiation URI, category: classification, severity: info,
+     description: "The payload is a tel: URI that would start a phone call.",
+     rationale: "Descriptive: calls are not a supported analyzer family in this prototype, so only the action is reported."}
+  - {id: TXT-006, title: Payload could not be safely normalised, category: classification, severity: weak,
+     description: "The payload matched a format but could not be parsed safely.",
+     rationale: "Malformed structured payloads are reported rather than guessed at."}

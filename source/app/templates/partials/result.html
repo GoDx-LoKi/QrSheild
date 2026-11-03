@@ -1,0 +1,145 @@
+{% from "_macros.html" import sev, chip, scale, viewer %}
+{% set res = it.res %}{% set a = res.assessment %}{% set ex = res.explanation %}
+<article class="result" id="r-{{ res.analysis_id }}" aria-label="Analysis result">
+  <header class="assessment level-{{ a.level }}">
+    <p class="kicker">Qualitative assessment — not a probability and not a guarantee</p>
+    <h2>{{ a.label }}</h2>
+    <p class="conf">Evidence confidence: <strong>{{ a.confidence }}</strong> — {{ a.confidence_basis }}.</p>
+    {% if a.level != 'not_assessed' %}{{ scale(a.level) }}{% endif %}
+  </header>
+
+  {% if a.level == 'not_assessed' %}
+    <div class="msg" role="status"><strong>{{ ex.headline }}</strong><p>{{ ex.text }}</p></div>
+    <ul>{% for r in res.recommendations %}<li>{{ r }}</li>{% endfor %}</ul>
+  {% else %}
+
+  <section class="recommend" aria-labelledby="rec-{{ res.analysis_id }}">
+    <h3 id="rec-{{ res.analysis_id }}">Recommended action</h3>
+    <ul>{% for r in res.recommendations %}<li>{{ r }}</li>{% endfor %}</ul>
+    <p class="hint">{{ ex.interpretation }}</p>
+  </section>
+
+  <div class="cols">
+    <section class="panel" aria-labelledby="found-{{ res.analysis_id }}">
+      <div class="sec-h"><h3 id="found-{{ res.analysis_id }}">What was found</h3><span class="scope-chip scope-local">Payload Summary</span></div>
+      <ul>{% for x in ex.what_was_found %}<li>{{ x }}</li>{% endfor %}</ul>
+      <h3>Decoded payload <span class="hint">(shown as text; secrets redacted)</span></h3>
+      <div class="payload-wrap">
+        <div class="payload">{{ res.qr.payload_raw }}</div>
+        <button type="button" class="copy-btn no-print" data-action="copy-payload">Copy</button>
+      </div>
+      <dl class="kv">
+        <dt>Payload type</dt><dd><strong>{{ res.payload.type|replace('_',' ') }}</strong></dd>
+        <dt>Intended action</dt><dd>{{ res.payload.action|replace('_',' ') }}{% if a.action_sensitivity %} · sensitivity <strong>{{ a.action_sensitivity|upper }}</strong>{% endif %}</dd>
+        {% if res.qr.decoder %}<dt>Decoder</dt><dd>{{ chip(res.qr.decoder) }}</dd>{% endif %}
+        {% for k, v in res.payload.normalized_fields.items() %}
+          {% if v is string and v %}<dt>{{ k|replace('_',' ') }}</dt><dd>{{ v|truncate(140) }}</dd>
+          {% elif v is number or v is boolean %}<dt>{{ k|replace('_',' ') }}</dt><dd>{{ v }}</dd>
+          {% elif v is sequence and v is not string and v|length > 0 and v|length <= 6 and (v|select('string')|list|length == v|length) %}<dt>{{ k|replace('_',' ') }}</dt><dd>{{ v|join(', ')|truncate(140) }}</dd>{% endif %}
+        {% endfor %}
+      </dl>
+    </section>
+    <section>
+      {{ viewer(res, res.analysis_id) }}
+      {% if res.input.image_warnings %}<ul class="warn-list">{% for w in res.input.image_warnings %}<li>{{ w }}</li>{% endfor %}</ul>{% endif %}
+    </section>
+  </div>
+
+  {% if res.context and res.context.attributes %}
+  <div class="sec-h"><h3>Context used</h3><span class="scope-chip scope-local">Local</span></div>
+  <table><thead><tr><th>Attribute</th><th>Value</th><th>Provenance</th><th>Confidence</th></tr></thead><tbody>
+  {% for c in res.context.attributes %}<tr><td><strong>{{ c.attribute|replace('_',' ') }}</strong></td><td>{{ c.value }}{% if c.raw_value and c.raw_value != c.value %} <span class="hint">(OCR read: {{ c.raw_value }})</span>{% endif %}</td>
+    <td>{{ chip(c.source, 'prov-' ~ c.source) }}</td><td>{{ c.confidence }}</td></tr>{% endfor %}
+  </tbody></table>
+  {% endif %}
+
+  <div class="sec-h"><h2>Why it matters</h2><span class="scope-chip scope-local">Local analysis</span></div>
+  {% if ex.why_it_matters %}
+    <p class="hint">Findings are grouped by evidence family. Correlated observations inside a family count once; severity describes how much a finding matters, not whether the QR code is malicious.</p>
+    <div class="ledger-toolbar no-print" role="region" aria-label="Filter evidence ledger">
+      <div class="filter-pills">
+        <button type="button" class="filter-btn active" data-filter-sev="all">All findings</button>
+        <button type="button" class="filter-btn" data-filter-sev="strong">Strong</button>
+        <button type="button" class="filter-btn" data-filter-sev="meaningful">Meaningful</button>
+        <button type="button" class="filter-btn" data-filter-sev="weak">Weak</button>
+      </div>
+      <div>
+        <input type="search" data-evidence-search placeholder="Filter indicators or observations…" aria-label="Filter evidence ledger by text">
+      </div>
+    </div>
+    {% for g in it.groups %}
+      {% if g.family != 'EXTERNAL_CORROBORATION' %}
+      <div class="family"><h4>{{ g.family|replace('_',' ') }} {{ sev(g.strength) }}{% if g.bumped %}<span class="hint">raised from weak: several distinct weak indicators</span>{% endif %}</h4>
+        <ul class="ledger">
+        {% for f in g.findings %}
+          <li class="row" data-row-sev="{{ f.severity }}">
+            <span class="id">{{ f.indicator_id }}</span>
+            <div><div class="t">{{ f.title }}</div><p class="o">{{ f.observation }}</p>
+              {% if f.expected %}<div class="meta">Expected: {{ f.expected }}</div>{% endif %}
+              {% for n in f.notes %}<div class="meta">⚑ {{ n }}</div>{% endfor %}
+              <details><summary>Rationale{% if f.plausible_exceptions %} &amp; possible legitimate explanations{% endif %}</summary>
+                <p>{{ f.rationale }}</p>
+                {% if f.plausible_exceptions %}<p><strong>Possible legitimate explanations:</strong></p><ul>{% for e in f.plausible_exceptions %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+              </details></div>
+            <div class="meta">{{ sev(f.severity) }}<br>{{ chip(f.source) }}{% if f.provenance %}{{ chip(f.provenance, 'prov-' ~ f.provenance) }}{% endif %}<br>confidence: {{ f.confidence }}{% if f.mismatch_type %}<br>{{ f.mismatch_type }}{% endif %}</div>
+          </li>
+        {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+    {% endfor %}
+  {% else %}<p>No notable indicator was observed in the evidence that was available.</p>{% endif %}
+
+  {% if res.matching_findings %}
+  <div class="sec-h"><h3>Entity &amp; destination comparisons</h3><span class="scope-chip scope-local">Local</span></div>
+  <table><thead><tr><th>Comparison</th><th>Expected (context)</th><th>Observed (payload)</th><th>Result</th><th>Why</th></tr></thead><tbody>
+  {% for m in res.matching_findings %}<tr><td>{{ m.comparison }}</td><td>{{ m.expected or '—' }}</td><td>{{ m.observed or '—' }}</td><td><strong>{{ m.result }}</strong><br>{{ chip(m.provenance or 'n/a', 'prov-' ~ (m.provenance or '')) }}</td>
+    <td>{{ m.rationale }}{% if m.exception_hint %}<br><span class="hint">{{ m.exception_hint }}</span>{% endif %}</td></tr>{% endfor %}
+  </tbody></table>
+  {% endif %}
+
+  <div class="cols">
+    <section class="panel">
+      <div class="sec-h"><h3>What remains uncertain</h3></div>
+      <ul>{% for x in ex.what_remains_uncertain %}<li>{{ x }}</li>{% endfor %}</ul>
+    </section>
+    <section class="panel">
+      <div class="sec-h"><h3>What to verify</h3></div>
+      {% if ex.plausible_legitimate_explanations %}<p class="hint">Possible legitimate explanations for the observations above:</p><ul>{% for x in ex.plausible_legitimate_explanations %}<li>{{ x }}</li>{% endfor %}</ul>{% endif %}
+      <ul>{% for x in ex.what_to_verify %}<li>{{ x }}</li>{% endfor %}</ul>
+    </section>
+  </div>
+
+  <div class="sec-h"><h2>External threat intelligence</h2><span class="scope-chip scope-external">External</span></div>
+  {% if res.threat_intel_results %}
+    <p class="hint">External results are corroborating evidence only. “No result” is not “safe”; “unavailable” is not “malicious”.</p>
+    <table><thead><tr><th>URL (redacted)</th><th>Provider</th><th>Query</th><th>Status</th><th>Detail</th><th>When</th></tr></thead><tbody>
+    {% for r in res.threat_intel_results %}<tr><td class="mono">{{ r.url }}</td><td>{{ r.provider }}</td><td>{{ r.query_type }}{% if r.cached %} (cached){% endif %}</td>
+      <td><strong>{{ r.status|replace('_',' ') }}</strong></td><td>{{ r.message }}{% if r.reference_link %} <a href="{{ r.reference_link }}" rel="noopener noreferrer nofollow" target="_blank">report</a>{% endif %}</td><td class="mono">{{ r.timestamp }}</td></tr>{% endfor %}
+    </tbody></table>
+    {% if ti_available and res.threat_intel_results|selectattr('status','equalto','no_result')|list %}
+    <form class="optin no-print" hx-post="/results/{{ res.analysis_id }}/scan" hx-target="closest article" hx-swap="outerHTML">
+      <strong>Request a fresh external scan</strong>
+      <p class="hint">No existing report was found. A fresh scan <em>submits the URL to the provider</em>, which may retain it.</p>
+      <label class="radios"><input type="checkbox" name="confirm" value="yes"> I understand and want to send this URL to the provider</label>
+      <button type="submit" class="secondary">Request scan</button>
+    </form>
+    {% endif %}
+  {% else %}<p>No URL in this payload is eligible for an external lookup.</p>{% endif %}
+
+  <details class="plain"><summary>How this assessment was reached (decision trace)</summary>
+    <ol>{% for t in a.trace %}<li>{{ t }}</li>{% endfor %}</ol>
+    <p class="hint">Independent anomaly families: {{ a.basis.independent_anomaly_families }} · meaningful or stronger: {{ a.basis.meaningful_or_stronger_families }} · strong: {{ a.basis.strong_families }} · action sensitivity: {{ a.basis.action_sensitivity }}.
+    Rules are versioned (<span class="mono">{{ res.manifest.rule_version }}</span>); heuristics are not validated probabilities.</p>
+  </details>
+  <details class="plain"><summary>Reproducibility manifest</summary>
+    <pre>{{ res.manifest|tojson(indent=2) }}</pre>
+  </details>
+  <div class="result-actions no-print">
+    <a class="btn secondary" href="/results/{{ res.analysis_id }}.json">Export JSON</a>
+    <a class="btn secondary" href="/results/{{ res.analysis_id }}.csv">Export findings CSV</a>
+    <a class="btn secondary" href="/results/{{ res.analysis_id }}">Permalink</a>
+    <button type="button" class="secondary" data-action="print-report">Print / Save PDF</button>
+  </div>
+  {% endif %}
+</article>

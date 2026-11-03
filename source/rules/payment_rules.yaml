@@ -1,0 +1,34 @@
+version: "1.0.0"
+defaults: {family: TRANSACTION, independent_group: transaction_terms, layer: payload, applicability: [payment]}
+rules:
+  - {id: PAY-001, title: Payment recipient identified, category: recipient, severity: info, independent_group: recipient,
+     description: "A payment address or merchant identifier is present.",
+     rationale: "Descriptive: identifies who would receive funds so that it can be compared with the context."}
+  - {id: PAY-002, title: Payee display name missing, category: recipient, severity: weak, family: IDENTITY, independent_group: payee_identity,
+     description: "The payload provides a payment address but no payee/merchant name.",
+     rationale: "Without a name the user cannot compare the recipient with the venue before paying; many static codes omit it.",
+     recommendation: "Check the recipient name shown by your payment app before confirming."}
+  - {id: PAY-003, title: Unusually large amount, category: amount, severity: weak, independent_group: amount,
+     description: "The encoded amount exceeds the configured threshold for its currency.",
+     rationale: "Large amounts raise the consequence of an error or fraud. The threshold is a configurable heuristic, not a statistical finding."}
+  - {id: PAY-004, title: Fixed amount encoded, category: amount, severity: info, independent_group: amount,
+     description: "The payload fixes the payment amount.",
+     rationale: "Fixed amounts are normal for invoices and dynamic merchant QR codes."}
+  - {id: PAY-005, title: Ancillary URL present, category: destination, severity: weak, family: DESTINATION, independent_group: payment_ancillary_url,
+     description: "The payment payload includes an auxiliary URL (for example a receipt or order page).",
+     rationale: "An extra URL widens the attack surface of an otherwise self-contained payment instruction; it is routine for some merchants."}
+  - {id: PAY-006, title: Unrecognised payment parameters, category: structure, severity: weak, family: PAYLOAD, independent_group: payload_structure,
+     description: "The payload carries parameters that the parser does not recognise.",
+     rationale: "Unknown parameters may be proprietary extensions or crafted additions; they are reported for transparency."}
+  - {id: PAY-007, title: Recipient identifier format invalid, category: structure, severity: weak, family: PAYLOAD, independent_group: payload_structure,
+     description: "The payment address does not match the expected format for its scheme.",
+     rationale: "Malformed identifiers usually fail in the payment app, but may indicate a crafted or corrupted code."}
+  - {id: PAY-008, title: Payment payload checksum invalid, category: integrity, severity: meaningful, family: PAYLOAD, independent_group: payload_integrity,
+     description: "An EMV-style merchant QR payload fails its CRC-16 check.",
+     rationale: "A failing CRC indicates corruption or manual alteration of a payload that is designed to be integrity-protected."}
+  - {id: PAY-010, title: Non-positive amount, category: amount, severity: weak, independent_group: amount,
+     description: "The amount is zero, negative or not numeric.",
+     rationale: "Invalid amounts are rejected by compliant apps; they signal a malformed or crafted payload."}
+  - {id: PAY-011, title: Amount not fixed by the QR code, category: amount, severity: info, independent_group: amount,
+     description: "The payload does not fix an amount, so the payer enters it.",
+     rationale: "Static merchant codes work this way; any amount shown on signage is therefore not enforced by the QR code."}

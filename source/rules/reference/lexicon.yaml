@@ -1,0 +1,14 @@
+version: "1.0.0"
+# Phrase lexicon for sensitive requests in pre-filled messages. Matching is proximity-based and ignores
+# negated phrasing ("do not share your OTP").
+request_verbs: [send, share, reply, provide, enter, type, give, text, submit, forward, tell, confirm, verify, disclose, mail, email]
+credential_objects: ["otp", "one time password", "one-time password", "one time pin", "one-time pin", "verification code", "passcode", "password", "pin", "mpin", "upi pin", "atm pin", "card pin", "cvv", "cvc", "security code", "login code", "visitor code"]
+financial_objects: ["account number", "account details", "card number", "credit card", "debit card", "bank account", "ifsc", "upi id", "iban", "routing number", "net banking", "internet banking", "bank details", "card details"]
+financial_actions: ["pay", "transfer", "deposit", "remit", "wire", "send money", "payment"]
+personal_objects: ["aadhaar", "aadhar", "pan number", "pan card", "passport number", "passport", "ssn", "social security", "date of birth", "dob", "mother's maiden", "home address", "id proof", "driving licence", "driving license"]
+urgency_phrases: ["urgent", "urgently", "immediately", "right now", "within 24 hours", "within 2 hours", "last chance", "act now", "expires today", "account will be blocked", "will be suspended", "suspended", "final notice", "limited time", "asap"]
+negations: ["do not", "don't", "dont", "never", "not to", "won't", "will not", "should not", "shouldn't"]
+network_expectations:
+  secure_words: [official, secure, staff, employee, employees, corporate, internal, private, secured, enterprise, admin]
+  internal_words: [staff, employee, employees, internal, private, admin, confidential, "do not share", "staff only"]
+  public_context_types: [poster, event, transit, parking, "government office", website]

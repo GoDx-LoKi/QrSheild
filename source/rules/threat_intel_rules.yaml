@@ -1,0 +1,27 @@
+version: "1.0.0"
+defaults: {family: EXTERNAL_CORROBORATION, independent_group: threat_intel, layer: external, applicability: [url, payment, sms, email, contact]}
+rules:
+  - {id: TI-001, title: External provider reports multiple malicious detections, category: threat_intelligence, severity: strong,
+     description: "The provider's existing report shows malicious detections at or above the configured threshold.",
+     rationale: "Independent engines flagged the destination. Provider verdicts are corroborating evidence only and can contain false positives."}
+  - {id: TI-002, title: External provider report is suspicious or mixed, category: threat_intelligence, severity: weak,
+     description: "The provider reports a small number of malicious or suspicious detections.",
+     rationale: "One or two detections among many engines is weak evidence and is frequently a false positive."}
+  - {id: TI-003, title: Existing report shows no malicious detections, category: threat_intelligence, severity: info,
+     description: "A provider report exists and contains no malicious detections.",
+     rationale: "Absence of detections is not proof of safety, especially for new or targeted infrastructure."}
+  - {id: TI-004, title: No existing external report, category: threat_intelligence, severity: info,
+     description: "The provider has no report for this URL.",
+     rationale: "No result is not a clean result. A fresh scan can be requested explicitly (it sends the URL to the provider)."}
+  - {id: TI-005, title: External corroboration unavailable, category: threat_intelligence, severity: info,
+     description: "The provider could not be reached or is not configured.",
+     rationale: "Local analysis stands alone; unavailability is never treated as a verdict."}
+  - {id: TI-006, title: External lookup not performed, category: threat_intelligence, severity: info,
+     description: "Threat-intelligence lookup was not requested or was blocked by the privacy policy.",
+     rationale: "Lookups send the URL to a third party, so they are opt-in and refused for URLs that look private or sensitive."}
+  - {id: TI-007, title: External provider rate limited, category: threat_intelligence, severity: info,
+     description: "The provider rejected the request because of rate limiting.",
+     rationale: "A rate limit says nothing about the URL."}
+  - {id: TI-008, title: External provider authentication failure, category: threat_intelligence, severity: info,
+     description: "The provider rejected the configured API key.",
+     rationale: "A configuration problem says nothing about the URL."}

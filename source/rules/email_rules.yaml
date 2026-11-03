@@ -1,0 +1,15 @@
+version: "1.0.0"
+defaults: {family: COMMUNICATION, independent_group: email_structure, layer: payload, applicability: [email]}
+rules:
+  - {id: EML-001, title: Multiple or hidden email recipients, category: structure, severity: weak,
+     description: "The payload includes several recipients or a bcc field.",
+     rationale: "Unusual for a single-purpose contact code; may indicate mass or concealed mailing."}
+  - {id: EML-002, title: Free email provider recipient, category: identity_consistency, severity: info,
+     description: "The recipient uses a free consumer mail provider.",
+     rationale: "Common among small businesses; reported for completeness and used only when the context implies a corporate sender."}
+  - {id: EML-003, title: Recipient domain resembles a known brand, category: host, severity: meaningful, family: DESTINATION, independent_group: destination_anomaly,
+     description: "The recipient domain is a lookalike of, or embeds, a known brand domain.",
+     rationale: "Lookalike mail domains are used to receive replies from users who believe they are contacting the brand."}
+  - {id: EML-004, title: Malformed email recipient, category: structure, severity: weak, family: PAYLOAD, independent_group: payload_structure,
+     description: "The recipient is not a syntactically plausible email address.",
+     rationale: "Mail clients usually reject malformed recipients; may indicate a crafted payload."}

@@ -1,0 +1,98 @@
+{
+  "crestwood-bank-verify.com": {
+    "malicious": 14,
+    "suspicious": 3,
+    "harmless": 48,
+    "undetected": 7
+  },
+  "sterling-bank-auth.com": {
+    "malicious": 11,
+    "suspicious": 2,
+    "harmless": 51,
+    "undetected": 8
+  },
+  "pacific-bank-secure.org": {
+    "malicious": 16,
+    "suspicious": 4,
+    "harmless": 44,
+    "undetected": 6
+  },
+  "northgate-bank-login.com": {
+    "malicious": 9,
+    "suspicious": 3,
+    "harmless": 54,
+    "undetected": 9
+  },
+  "crownpoint-bank-portal.org": {
+    "malicious": 12,
+    "suspicious": 2,
+    "harmless": 50,
+    "undetected": 8
+  },
+  "harborview-pay-gateway.com": {
+    "malicious": 10,
+    "suspicious": 2,
+    "harmless": 52,
+    "undetected": 9
+  },
+  "sunstone-guest-checkin.com": {
+    "malicious": 13,
+    "suspicious": 3,
+    "harmless": 49,
+    "undetected": 7
+  },
+  "maplewood-patient-auth.org": {
+    "malicious": 8,
+    "suspicious": 2,
+    "harmless": 55,
+    "undetected": 9
+  },
+  "vanguard-meter-fine.com": {
+    "malicious": 15,
+    "suspicious": 3,
+    "harmless": 47,
+    "undetected": 6
+  },
+  "summit-campus-sso.com": {
+    "malicious": 11,
+    "suspicious": 2,
+    "harmless": 52,
+    "undetected": 8
+  },
+  "apex-hospital-billing.com": {
+    "malicious": 10,
+    "suspicious": 3,
+    "harmless": 51,
+    "undetected": 8
+  },
+  "crescent-transit-pass.com": {
+    "malicious": 9,
+    "suspicious": 2,
+    "harmless": 53,
+    "undetected": 9
+  },
+  "seaview-resort-booking.com": {
+    "malicious": 7,
+    "suspicious": 2,
+    "harmless": 56,
+    "undetected": 9
+  },
+  "beacon-medical-records.org": {
+    "malicious": 12,
+    "suspicious": 3,
+    "harmless": 49,
+    "undetected": 8
+  },
+  "elmhurst-bank-verify.com": {
+    "malicious": 11,
+    "suspicious": 2,
+    "harmless": 50,
+    "undetected": 8
+  },
+  "meridian-bank-auth.com": {
+    "malicious": 13,
+    "suspicious": 3,
+    "harmless": 48,
+    "undetected": 8
+  }
+}

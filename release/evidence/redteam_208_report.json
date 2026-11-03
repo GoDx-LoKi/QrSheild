@@ -1,0 +1,88 @@
+{
+  "status": "PASS",
+  "execution_mode": "blackbox_cli_subprocess (python -m evaluation --batch-jsonl)",
+  "scenarios_file": "release/evidence/redteam_208_scenarios.jsonl",
+  "thresholds": {
+    "min_attack_recall": 0.95,
+    "min_benign_specificity": 0.95,
+    "min_per_category_rate": 0.9
+  },
+  "threshold_checks": {
+    "case_count_208": true,
+    "attack_recall_gte_min": true,
+    "benign_specificity_gte_min": true,
+    "all_categories_gte_min": true
+  },
+  "total_redteam_cases": 208,
+  "attack_cases": 104,
+  "benign_fp_trap_cases": 104,
+  "attack_detection_recall": 1.0,
+  "benign_fp_trap_specificity_L0": 1.0,
+  "benign_fp_trap_over_escalation_rate": 0.0,
+  "per_category": {
+    "url": {
+      "attack_total": 13,
+      "attack_detected": 13,
+      "attack_recall": 1.0,
+      "benign_total": 13,
+      "benign_clean_L0": 13,
+      "benign_specificity": 1.0
+    },
+    "wifi": {
+      "attack_total": 13,
+      "attack_detected": 13,
+      "attack_recall": 1.0,
+      "benign_total": 13,
+      "benign_clean_L0": 13,
+      "benign_specificity": 1.0
+    },
+    "payment": {
+      "attack_total": 13,
+      "attack_detected": 13,
+      "attack_recall": 1.0,
+      "benign_total": 13,
+      "benign_clean_L0": 13,
+      "benign_specificity": 1.0
+    },
+    "contact": {
+      "attack_total": 13,
+      "attack_detected": 13,
+      "attack_recall": 1.0,
+      "benign_total": 13,
+      "benign_clean_L0": 13,
+      "benign_specificity": 1.0
+    },
+    "sms": {
+      "attack_total": 13,
+      "attack_detected": 13,
+      "attack_recall": 1.0,
+      "benign_total": 13,
+      "benign_clean_L0": 13,
+      "benign_specificity": 1.0
+    },
+    "email": {
+      "attack_total": 13,
+      "attack_detected": 13,
+      "attack_recall": 1.0,
+      "benign_total": 13,
+      "benign_clean_L0": 13,
+      "benign_specificity": 1.0
+    },
+    "deep_link": {
+      "attack_total": 13,
+      "attack_detected": 13,
+      "attack_recall": 1.0,
+      "benign_total": 13,
+      "benign_clean_L0": 13,
+      "benign_specificity": 1.0
+    },
+    "plain_text": {
+      "attack_total": 13,
+      "attack_detected": 13,
+      "attack_recall": 1.0,
+      "benign_total": 13,
+      "benign_clean_L0": 13,
+      "benign_specificity": 1.0
+    }
+  }
+}

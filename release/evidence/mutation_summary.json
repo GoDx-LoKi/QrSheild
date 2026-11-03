@@ -1,0 +1,51 @@
+{
+  "status": "PASS",
+  "measurement_method": "custom_ast_mutation_harness (tools/run_mutation.py)",
+  "operators_mutated": "Compare (Eq, NotEq, GtE, LtE, Gt, Lt, Is, IsNot) and BoolOp (And, Or)",
+  "overall_mutation_score_pct": 90.0,
+  "total_mutants": 50,
+  "killed_mutants": 45,
+  "survived_mutants": 5,
+  "min_threshold_pct": 70.0,
+  "per_module": {
+    "qrshield_core.decision.policy": {
+      "total_mutants": 25,
+      "killed_mutants": 24,
+      "survived_mutants": 1,
+      "mutation_score_pct": 96.0
+    },
+    "qrshield_core.matching.entity": {
+      "total_mutants": 25,
+      "killed_mutants": 21,
+      "survived_mutants": 4,
+      "mutation_score_pct": 84.0
+    }
+  },
+  "survived_sample": [
+    {
+      "module": "qrshield_core.decision.policy",
+      "line": 79,
+      "mutation": "Compare(Is)"
+    },
+    {
+      "module": "qrshield_core.matching.entity",
+      "line": 126,
+      "mutation": "BoolOp(And)"
+    },
+    {
+      "module": "qrshield_core.matching.entity",
+      "line": 143,
+      "mutation": "BoolOp(Or)"
+    },
+    {
+      "module": "qrshield_core.matching.entity",
+      "line": 166,
+      "mutation": "BoolOp(Or)"
+    },
+    {
+      "module": "qrshield_core.matching.entity",
+      "line": 100,
+      "mutation": "BoolOp(Or)"
+    }
+  ]
+}

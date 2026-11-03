@@ -1,0 +1,35 @@
+version: "1.0.0"
+# Registry of well-known application URI schemes. Operation keywords drive sensitivity checks.
+schemes:
+  tg: {app: Telegram, category: messaging}
+  telegram: {app: Telegram, category: messaging}
+  sgnl: {app: Signal, category: messaging}
+  signal: {app: Signal, category: messaging}
+  whatsapp: {app: WhatsApp, category: messaging}
+  zoommtg: {app: Zoom, category: conferencing}
+  zoomus: {app: Zoom, category: conferencing}
+  msteams: {app: Microsoft Teams, category: conferencing}
+  fb: {app: Facebook, category: social}
+  instagram: {app: Instagram, category: social}
+  twitter: {app: X (Twitter), category: social}
+  spotify: {app: Spotify, category: media}
+  market: {app: Google Play Store, category: store}
+  itms-apps: {app: Apple App Store, category: store}
+  itms: {app: Apple App Store, category: store}
+  intent: {app: Android intent, category: intent}
+  otpauth: {app: Authenticator app, category: authentication}
+  geo: {app: Maps, category: location}
+  webcal: {app: Calendar, category: calendar}
+  opentable: {app: OpenTable, category: booking}
+  resy: {app: Resy, category: booking}
+  eazydiner: {app: EazyDiner, category: booking}
+  magicpin: {app: magicpin, category: booking}
+  bookmyshow: {app: BookMyShow, category: booking}
+  practo: {app: Practo, category: booking}
+operations:
+  device_linking: [linkdevice, link_device, link-device, pairing, pair, qrlogin, linked-devices, bind, bind_device, session_sync]
+  account_recovery: [recover, recovery, reset, forgot, restore, seed, mnemonic]
+  authentication: [login, signin, sign-in, auth, authenticate, authorize, authorise, grant, token, session, verify, otp, sso, oauth]
+  payment: [pay, payment, transfer, checkout, collect, send, wallet, approve, allowance, custody, grant_custody, delegate, mandate, autopay]
+  account_change: [delete, remove, unlink, deactivate, change-password, webhook, permissions]
+  content: [resolve, join, open, view, details, profile, share, invite, menu, venue, restaurant]

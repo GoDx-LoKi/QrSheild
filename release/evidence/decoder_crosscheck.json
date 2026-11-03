@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "decoder_implementation": "qrshield_cli_subprocess_vs_standalone_cv2_QRCodeDetector_zero_imports",
+  "images_checked": 192,
+  "raw_single_pass_opencv_decoded_count": 133,
+  "raw_single_pass_opencv_decode_rate": 0.6927,
+  "standalone_multipass_decoded_count": 171,
+  "standalone_multipass_decode_rate": 0.8906,
+  "qrshield_multipass_decoded_count": 191,
+  "qrshield_multipass_decode_rate": 0.9948,
+  "both_decoded_count": 133,
+  "payload_exact_match_count": 133,
+  "payload_agreement_rate": 1.0,
+  "standalone_and_qrshield_decoded_count": 171,
+  "standalone_qrshield_exact_match_count": 171,
+  "standalone_qrshield_agreement_rate": 1.0,
+  "qrshield_ground_truth_exact_match_count": 191,
+  "qrshield_ground_truth_agreement_rate": 1.0
+}

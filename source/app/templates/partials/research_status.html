@@ -1,0 +1,51 @@
+{% if ds %}
+<div class="stat-grid">
+  <div class="stat-card">
+    <div class="stat-val">{{ ds.base_items|length }}</div>
+    <div class="stat-lbl">Base Images</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-val">{{ ds.counterfactual_items|length }}</div>
+    <div class="stat-lbl">Counterfactual ({{ ds.counterfactual_pairs|length }} pairs)</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-val">{{ ds.robustness_items|length }}</div>
+    <div class="stat-lbl">Robustness Variants</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-val">{{ ds.total_images }}</div>
+    <div class="stat-lbl">Total Benchmark Images</div>
+  </div>
+</div>
+{% endif %}
+<dl class="kv">
+  <dt>Research dataset location</dt><dd><code>{{ dataset_root }}</code></dd>
+  <dt>Status</dt>
+  <dd>
+    {% if not dataset_exists %}
+      <span class="chip err">Not found</span>
+      <p class="hint">Place <code>qrs_bench_ind</code> beside the project root.</p>
+    {% elif validation and not validation.ok %}
+      <span class="chip err">Validation errors ({{ validation.errors|length }})</span>
+    {% elif validation %}
+      <span class="chip ok">Valid</span>
+    {% endif %}
+  </dd>
+  {% if ds %}
+    <dt>Base</dt><dd>{{ ds.base_items|length }} images</dd>
+    <dt>Counterfactual</dt><dd>{{ ds.counterfactual_items|length }} images / {{ ds.counterfactual_pairs|length }} pairs</dd>
+    <dt>Robustness</dt><dd>{{ ds.robustness_items|length }} images</dd>
+    <dt>Total</dt><dd>{{ ds.total_images }}</dd>
+    <dt>Manifest hash</dt><dd><code>{{ ds.manifest_hash }}</code></dd>
+    {% if validation and validation.per_payload %}
+      <dt>Per payload type</dt>
+      <dd>{% for pt, n in validation.per_payload.items() %}<span class="chip">{{ pt }}: {{ n }}</span>{% endfor %}</dd>
+    {% endif %}
+  {% endif %}
+</dl>
+{% if validation and validation.errors %}
+  <div class="msg" role="alert"><strong>Errors</strong><ul>{% for e in validation.errors %}<li>{{ e }}</li>{% endfor %}</ul></div>
+{% endif %}
+{% if validation and validation.warnings %}
+  <div class="msg ok"><strong>Warnings</strong><ul>{% for w in validation.warnings %}<li>{{ w }}</li>{% endfor %}</ul></div>
+{% endif %}

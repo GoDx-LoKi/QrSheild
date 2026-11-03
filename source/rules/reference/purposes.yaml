@@ -1,0 +1,44 @@
+version: "1.0.0"
+# Purpose lexicon: keywords found in context text -> purpose key -> allowed payload actions.
+purposes:
+  - {key: pay, keywords: ["scan to pay", "pay here", "pay now", "payment", "pay bill", "pay via", "make payment", "checkout", "pay with", "pay using", "pay at", "pay"],
+     allowed_actions: [financial_transaction, open_web_resource, launch_app]}
+  - {key: receive_money, keywords: ["refund", "receive refund", "claim refund", "cashback", "reward", "prize", "claim", "receive money", "get paid", "lottery", "winner"],
+     allowed_actions: [open_web_resource]}
+  - {key: wifi, keywords: ["wi-fi", "wifi", "wi fi", "internet access", "network access", "connect to network", "guest network"],
+     allowed_actions: [join_network, open_web_resource]}
+  - {key: information, keywords: ["menu", "view menu", "catalogue", "catalog", "brochure", "information", "learn more", "visit website", "official website", "website", "schedule", "timetable", "directions", "reviews", "feedback", "survey", "view"],
+     allowed_actions: [open_web_resource, display_text]}
+  - {key: add_contact, keywords: ["save contact", "add contact", "contact us", "business card", "vcard", "save our number"],
+     allowed_actions: [add_contact, open_web_resource, send_sms, send_email, initiate_call]}
+  - {key: message, keywords: ["text us", "sms us", "message us", "whatsapp us", "send a message", "book via sms", "text to book", "text to"],
+     allowed_actions: [send_sms, launch_app, open_web_resource]}
+  - {key: email, keywords: ["email us", "e-mail us", "write to us", "send us an email", "mail us"],
+     allowed_actions: [send_email, open_web_resource]}
+  - {key: verify_identity, keywords: ["verification", "verify", "kyc", "account verification", "confirm your identity", "login", "log in", "sign in", "account"],
+     allowed_actions: [open_web_resource, send_sms, launch_app, authenticate]}
+  - {key: install_app, keywords: ["download app", "download our app", "install app", "get the app", "open app", "mobile app", "open mobile banking", "mobile banking", "app"],
+     allowed_actions: [launch_app, open_web_resource]}
+  - {key: link_device, keywords: ["link device", "link signal", "link whatsapp", "link desktop", "scan to link", "linked devices", "pair device"],
+     allowed_actions: [launch_app, link_device]}
+  - {key: join_channel, keywords: ["join channel", "join group", "join chat", "support channel", "join us on", "follow us"],
+     allowed_actions: [launch_app, open_web_resource]}
+context_types:
+  hotel: [hotel, resort, inn, lodge, hostel, guest house]
+  restaurant: [restaurant, cafe, diner, bistro, canteen, eatery, bar, bakery]
+  shop: [shop, store, mart, boutique, supermarket, retail, outlet]
+  salon: [salon, spa, barber, parlour, parlor]
+  clinic: [clinic, hospital, pharmacy, dental, diagnostic]
+  university: [university, college, campus]
+  school: [school, academy]
+  bank: [bank, credit union, finance, financial, insurance]
+  government office: [government, municipal, ministry, department, tax, passport, police]
+  event: [event, festival, concert, conference, summit, expo]
+  transit: [metro, railway, station, airport, bus stop, transit]
+  parking: [parking, car park, meter]
+  office: [office, corporate, headquarters, infotech, technologies]
+  website: [website, webpage, landing page]
+  poster: [poster, flyer, banner, notice]
+  package: [package, parcel, delivery]
+  receipt: [receipt, invoice, bill]
+  product: [product, label, packaging]

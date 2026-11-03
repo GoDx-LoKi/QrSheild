@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% from "_macros.html" import chip %}
+{% block title %}Research Tests{% endblock %}
+{% block content %}
+<div class="page-header">
+  <span class="eyebrow">Reproducible Benchmark Harness</span>
+  <h1>Research Tests</h1>
+  <p class="lede">Evaluates the <strong>same engine</strong> used by the Analyze page against the external research dataset. Threat intelligence is permanently disabled. All OCR candidates are automatically accepted. Ground truth is loaded only after predictions are frozen.</p>
+</div>
+
+<section class="panel" aria-labelledby="ds-heading">
+  <div class="sec-h">
+    <h2 id="ds-heading">Research Dataset</h2>
+    <span class="scope-chip scope-local">QRS-Bench-Ind</span>
+  </div>
+  <div id="dataset-status">
+    {% if ds %}
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-val">{{ ds.base_items|length }}</div>
+        <div class="stat-lbl">Base Images</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val">{{ ds.counterfactual_items|length }}</div>
+        <div class="stat-lbl">Counterfactual ({{ ds.counterfactual_pairs|length }} pairs)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val">{{ ds.robustness_items|length }}</div>
+        <div class="stat-lbl">Robustness Variants</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val">{{ ds.total_images }}</div>
+        <div class="stat-lbl">Total Benchmark Images</div>
+      </div>
+    </div>
+    {% endif %}
+    <dl class="kv">
+      <dt>Expected location</dt><dd><code>{{ dataset_root }}</code></dd>
+      <dt>Status</dt>
+      <dd>
+        {% if not dataset_exists %}
+          <span class="chip err">Not found</span>
+          <p class="hint">Place the <code>qrs_bench_ind</code> folder beside the project root, then click Refresh.</p>
+        {% elif validation and not validation.ok %}
+          <span class="chip err">Validation errors</span>
+        {% elif validation %}
+          <span class="chip ok">Valid</span>
+        {% else %}
+          <span class="chip">Unknown</span>
+        {% endif %}
+      </dd>
+      {% if ds %}
+        <dt>Base images</dt><dd>{{ ds.base_items|length }}</dd>
+        <dt>Counterfactual images</dt><dd>{{ ds.counterfactual_items|length }} ({{ ds.counterfactual_pairs|length }} pairs)</dd>
+        <dt>Robustness images</dt><dd>{{ ds.robustness_items|length }}</dd>
+        <dt>Total</dt><dd>{{ ds.total_images }}</dd>
+        <dt>Manifest hash</dt><dd><code>{{ ds.manifest_hash }}</code></dd>
+      {% endif %}
+    </dl>
+    {% if validation and validation.errors %}
+      <div class="msg" role="alert"><strong>Validation errors</strong><ul>{% for e in validation.errors %}<li>{{ e }}</li>{% endfor %}</ul></div>
+    {% endif %}
+    {% if validation and validation.warnings %}
+      <div class="msg ok"><strong>Warnings</strong><ul>{% for w in validation.warnings %}<li>{{ w }}</li>{% endfor %}</ul></div>
+    {% endif %}
+  </div>
+  <form hx-post="/research/validate" hx-target="#dataset-status" hx-indicator="#vi">
+    <button type="submit" class="secondary">Refresh / Validate</button><span id="vi" class="htmx-indicator">Validating…</span>
+  </form>
+</section>
+
+{% if dataset_exists and ds %}
+<section class="panel" aria-labelledby="run-heading">
+  <div class="sec-h">
+    <h2 id="run-heading">Run Research Tests</h2>
+    <span class="scope-chip scope-local">Offline Execution</span>
+  </div>
+  <form hx-post="/research/run" hx-target="#run-out" hx-indicator="#ri" id="research-form">
+
+    <h3>Test type</h3>
+    <div class="radios" role="radiogroup" aria-label="Test suite">
+      <label><input type="radio" name="suite" value="base" checked> Base &mdash; {{ ds.base_items|length }} images (640 expected)</label>
+      <label><input type="radio" name="suite" value="counterfactual"> Counterfactual &mdash; {{ ds.counterfactual_items|length }} images / {{ ds.counterfactual_pairs|length }} pairs</label>
+      <label><input type="radio" name="suite" value="robustness"> Robustness &mdash; {{ ds.robustness_items|length }} images</label>
+      <label><input type="radio" name="suite" value="all"> All &mdash; {{ ds.total_images }} images</label>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <strong>OCR Policy</strong>
+        <p class="hint">{{ ocr_policy }}</p>
+      </div>
+      <div class="card">
+        <strong>External Analysis Policy</strong>
+        <p class="hint">{{ ti_policy }}</p>
+      </div>
+    </div>
+
+    {% if validation and not validation.ok %}
+      <div class="msg" role="alert"><strong>Cannot run:</strong> fix dataset validation errors first.</div>
+    {% else %}
+      <button type="submit" id="run-btn">Run tests</button><span id="ri" class="htmx-indicator">Starting…</span>
+    {% endif %}
+  </form>
+</section>
+{% endif %}
+
+<div id="run-out" aria-live="polite"></div>
+
+<section class="panel" aria-labelledby="prev-runs-heading">
+  <div class="sec-h">
+    <h2 id="prev-runs-heading">Previous runs</h2>
+    <span class="scope-chip scope-local">Run History</span>
+  </div>
+  {% if runs %}
+  <table><thead><tr><th>Run ID</th><th>Files</th></tr></thead><tbody>
+  {% for r in runs %}<tr><td class="mono">{{ r.run_id }}</td>
+    <td>{% for f in r.files %}<a class="chip" href="/research/runs/{{ r.run_id }}/{{ f }}">{{ f }}</a> {% endfor %}</td></tr>{% endfor %}
+  </tbody></table>
+  {% else %}<p class="hint">No runs yet. Select a test suite above and click Run tests to generate benchmark reports.</p>{% endif %}
+</section>
+{% endblock %}

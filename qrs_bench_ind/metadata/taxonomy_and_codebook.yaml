@@ -1,0 +1,67 @@
+benchmark: QRS-Bench-Ind
+version: 1.0.0
+total_evaluation_units: 1080
+total_images: 1280
+splits:
+  dev:
+    units: 128
+    images: 152
+    organizations: 8
+    templates:
+    - T01
+    - T02
+    - T03
+    - T04
+  val:
+    units: 176
+    images: 200
+    organizations: 12
+    templates:
+    - T05
+    - T06
+    - T07
+    - T08
+  test_locked:
+    units: 776
+    images: 928
+    organizations: 40
+    templates:
+    - T09
+    - T10
+    - T11
+    - T12
+    - T13
+    - T14
+    - T15
+    - T16
+    - T17
+    - T18
+    - T19
+    - T20
+    - T21
+    - T22
+    - T23
+    - T24
+    - T25
+    - T26
+    - T27
+    - T28
+ordinal_levels:
+- no_material_concern
+- needs_verification
+- high_concern
+- harmful_corroborated
+categories:
+- url
+- wifi
+- payment
+- contact
+- sms
+- email
+- deep_link
+- plain_text
+strata:
+- core_scenes
+- challenge_traps
+- counterfactual_pairs
+- robustness_variants

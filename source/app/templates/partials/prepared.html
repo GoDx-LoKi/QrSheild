@@ -1,0 +1,114 @@
+{% from "_macros.html" import chip %}
+<hr class="rule">
+<div class="sec-h">
+  <h2>1 · Detected QR code{{ 's' if multi else '' }}</h2>
+  <span class="scope-chip scope-local">Stage 1 · Decode &amp; Scene OCR</span>
+</div>
+{% if prep.loaded.warnings %}<ul class="warn-list">{% for w in prep.loaded.warnings %}<li>{{ w }}</li>{% endfor %}</ul>{% endif %}
+<div class="cols">
+  <div class="viewer">
+    <svg viewBox="0 0 {{ prep.loaded.width }} {{ prep.loaded.height }}" role="img" aria-label="Uploaded image with detected QR codes outlined">
+      <image href="/image/{{ prep.analysis_id }}" x="0" y="0" width="{{ prep.loaded.width }}" height="{{ prep.loaded.height }}"/>
+      <g data-layer-group="ocr" class="hidden">{% for b in prep.ocr.blocks %}<polygon class="ocr-box" points="{% for p in b.bbox %}{{ p[0] }},{{ p[1] }} {% endfor %}"/>{% endfor %}</g>
+      <g data-layer-group="qr">{% for c in prep.decode.codes %}<polygon class="qr-box {{ 'sel' if c.decoded else 'undecoded' }}" points="{% for p in c.bbox %}{{ p[0] }},{{ p[1] }} {% endfor %}"/>
+        <text class="qr-tag" x="{{ c.bbox[0][0] }}" y="{{ c.bbox[0][1] - 8 if c.bbox[0][1] > 30 else c.bbox[0][1] + 28 }}">#{{ c.index + 1 }}</text>{% endfor %}</g>
+    </svg>
+    <div class="toggles no-print">
+      <label><input type="checkbox" data-layer="qr" checked> QR regions</label>
+      <label><input type="checkbox" data-layer="ocr"> OCR regions</label>
+    </div>
+  </div>
+  <div class="panel">
+    {% if prep.decode.count == 0 %}
+      <div class="msg" role="alert"><strong>No QR code detected.</strong><p>This is not a security verdict. Try a sharper, better-lit image with the whole code in frame.</p></div>
+    {% else %}
+      <h3>Inspection Telemetry</h3>
+      <dl class="kv">
+        <dt>QR codes found</dt><dd><strong>{{ prep.decode.count }}</strong></dd>
+        <dt>Decoder</dt><dd>{% for c in prep.decode.codes %}{{ chip(c.decoder) }}{% endfor %}</dd>
+        <dt>Image</dt><dd>{{ prep.loaded.width }}×{{ prep.loaded.height }} px · sharpness {{ prep.loaded.quality.sharpness_laplacian_var }}</dd>
+        <dt>OCR status</dt><dd>{{ chip(prep.ocr.status, 'ok' if prep.ocr.status == 'ok' else '') }} · {{ prep.candidates|length }} context candidate{{ '' if prep.candidates|length == 1 else 's' }}</dd>
+      </dl>
+    {% endif %}
+  </div>
+</div>
+
+{% if prep.decode.count > 0 %}
+<form id="run" hx-post="/analyze/run" hx-target="#results" hx-swap="innerHTML" hx-indicator="#run-ind">
+  <input type="hidden" name="analysis_id" value="{{ prep.analysis_id }}">
+
+  <h3>Select the QR code to analyze</h3>
+  {% if multi %}<p class="hint">Several QR codes were found. QRShield will not choose one silently.</p>{% endif %}
+  {% for c in prep.decode.codes %}
+  <fieldset>
+    <legend>
+      <label><input type="radio" name="qr_index" value="{{ c.index }}" {{ 'required' if multi else 'checked' }} {{ 'disabled' if not c.decoded else '' }}> QR #{{ c.index + 1 }}</label>
+    </legend>
+    {% if c.decoded %}
+      <dl class="kv">
+        <dt>Payload type</dt><dd><strong>{{ previews[c.index].type|replace('_',' ') }}</strong> <span class="hint">({{ previews[c.index].classification_reason }})</span></dd>
+        <dt>Intended action</dt><dd>{{ previews[c.index].action|replace('_',' ') }}</dd>
+      </dl>
+      <div class="payload-wrap">
+        <div class="payload" aria-label="Decoded payload (redacted, shown as text only)">{{ previews[c.index].raw_redacted }}</div>
+        <button type="button" class="copy-btn no-print" data-action="copy-payload">Copy</button>
+      </div>
+    {% else %}<p class="hint">{{ c.note }} A failed decode is not a security verdict.</p>{% endif %}
+  </fieldset>
+  {% endfor %}
+  {% if multi %}<div class="radios"><label><input type="radio" name="qr_index" value="all"> Analyze all decoded codes (batch)</label></div>{% endif %}
+
+  <div class="sec-h">
+    <h2>2 · Context</h2>
+    <span class="scope-chip scope-local">Stage 2 · Human-in-the-Loop Verification</span>
+  </div>
+  <p class="lede">Context is what the surroundings say the QR code is for. OCR output is <strong>evidence, not truth</strong>: review it, correct it, or ignore it. Anything you leave on “Ignore” is not used.</p>
+  {% if prep.ocr.status != 'ok' %}
+    <div class="msg {{ 'ok' if prep.ocr.status == 'no_text' else '' }}" role="status"><strong>Context extraction unavailable.</strong><p>{{ prep.ocr.message }}</p><p class="hint">This is not a security verdict. Enter the context below, or analyze without it (the assessment will say that consistency was not assessed).</p></div>
+  {% else %}
+    <div class="filter-pills no-print">
+      <button type="button" class="secondary btn-sm" data-action="use-confident">Use all high/medium-confidence suggestions</button>
+      <button type="button" class="secondary btn-sm" data-action="reset-ignore">Reset all to Ignore</button>
+    </div>
+    {% for attr, items in cands_by_attr.items() %}
+      <h3>{{ attr_titles.get(attr, attr) }}</h3>
+      {% for c in items %}
+      <fieldset>
+        <legend>OCR read: <span class="mono">{{ c.raw_text }}</span> {{ chip('confidence: ' ~ c.confidence.value) }} {{ chip('source: ocr') }}</legend>
+        <dl class="kv"><dt>Suggested value</dt><dd><strong>{{ c.value }}</strong>{% if c.note %} <span class="hint">— {{ c.note }}</span>{% endif %}</dd></dl>
+        <div class="radios" role="radiogroup" aria-label="Use this suggestion?">
+          <label><input type="radio" name="cand_{{ c.candidate_id }}" value="use" data-confidence="{{ c.confidence.value }}"> Use detected value</label>
+          <label><input type="radio" name="cand_{{ c.candidate_id }}" value="edit"> Edit</label>
+          <label><input type="radio" name="cand_{{ c.candidate_id }}" value="ignore" checked> Ignore</label>
+        </div>
+        <input type="text" name="cand_{{ c.candidate_id }}_value" value="{{ c.value }}" aria-label="Edited value for {{ attr_titles.get(attr, attr) }}" maxlength="200">
+      </fieldset>
+      {% endfor %}
+    {% endfor %}
+  {% endif %}
+
+  <div class="panel">
+    <h3>Enter or add context manually <span class="hint">(optional)</span></h3>
+    <div class="grid2">
+      <div class="field"><label for="organization">Business / venue / organization name</label><input id="organization" name="organization" type="text" maxlength="200" placeholder="e.g. Sunrise Hotel"></div>
+      <div class="field"><label for="context_type">Context type</label>
+        <select id="context_type" name="context_type">{% for t in context_types %}<option value="{{ t }}">{{ t or '— unknown —' }}</option>{% endfor %}</select></div>
+      <div class="field"><label for="purpose">Stated purpose</label><input id="purpose" name="purpose" type="text" maxlength="200" placeholder="e.g. Scan to pay"></div>
+      <div class="field"><label for="amount">Displayed amount</label><input id="amount" name="amount" type="text" maxlength="40" placeholder="e.g. 850"></div>
+    </div>
+    <div class="field"><label for="additional">Additional context</label><textarea id="additional" name="additional" maxlength="1000" placeholder="Anything else visible: phone number, email, website, instructions…"></textarea></div>
+  </div>
+
+  <div class="optin {{ '' if ti_available else 'off' }}">
+    <strong>External threat intelligence (optional)</strong>
+    {% if ti_available %}
+      <p class="hint">Local analysis never contacts a decoded URL. If you tick this box, QRShield sends <em>only the URL</em> (never your image or context) to {{ ti_state.provider }} to look for an <em>existing</em> report. URLs that look private or contain credentials are never sent.</p>
+      <label class="radios"><input type="checkbox" name="ti_lookup" value="on"> Look up an existing report for URLs in this QR code</label>
+    {% else %}
+      <p>Threat intelligence unavailable — local analysis only. <span class="hint">Set <code>VIRUSTOTAL_API_KEY</code> to enable optional lookups.</span></p>
+    {% endif %}
+  </div>
+
+  <button type="submit">Run analysis</button><span id="run-ind" class="htmx-indicator">Analyzing…</span>
+</form>
+{% endif %}

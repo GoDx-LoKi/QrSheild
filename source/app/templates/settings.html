@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% from "_macros.html" import chip %}
+{% block title %}Settings{% endblock %}
+{% block content %}
+<div class="page-header">
+  <span class="eyebrow">System Posture &amp; Runtime Configuration</span>
+  <h1>Settings &amp; status</h1>
+  <p class="lede">Read-only status. Configuration is by environment variables (see <code>.env.example</code>); secrets are never displayed.</p>
+</div>
+
+<div class="stat-grid">
+  <div class="stat-card">
+    <div class="stat-val">{{ n_rules }}</div>
+    <div class="stat-lbl">Declarative Rules (v{{ rule_version }})</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-val">{{ 'Enabled' if s.ocr_enabled else 'Disabled' }}</div>
+    <div class="stat-lbl">Local OCR ({{ ocr_name }})</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-val">{{ 'Configured' if s.virustotal_configured else 'Local Only' }}</div>
+    <div class="stat-lbl">Threat Intelligence</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-val">{{ s.max_image_size_mb }} MB</div>
+    <div class="stat-lbl">Max Upload Ceiling</div>
+  </div>
+</div>
+
+<div class="grid2">
+  <section class="panel" aria-labelledby="local-heading">
+    <div class="sec-h">
+      <h3 id="local-heading">Local analysis</h3>
+      <span class="chip ok">Active</span>
+    </div>
+    <dl class="kv">
+      <dt>Status</dt><dd>Available (no network needed)</dd>
+      <dt>Rules</dt><dd>{{ n_rules }} rules · version <span class="mono">{{ rule_version }}</span></dd>
+      <dt>Reference data</dt><dd>version <span class="mono">{{ ref_version }}</span> · synthetic entries {{ 'loaded' if s.load_synthetic_reference else 'not loaded' }}</dd>
+      <dt>Environment</dt><dd>{{ s.env }} · Python {{ py }} · log level {{ s.log_level }}</dd>
+      <dt>Limits</dt><dd>max image {{ s.max_image_size_mb }} MB · {{ s.max_image_pixels }} px · results kept {{ s.result_retention_days }} days</dd>
+    </dl>
+  </section>
+
+  <section class="panel" aria-labelledby="ocr-heading">
+    <div class="sec-h">
+      <h3 id="ocr-heading">OCR</h3>
+      <span class="chip {{ 'ok' if s.ocr_enabled else '' }}">{{ 'Enabled' if s.ocr_enabled else 'Disabled' }}</span>
+    </div>
+    <dl class="kv">
+      <dt>Setting</dt><dd>{{ 'Enabled' if s.ocr_enabled else 'Disabled' }}</dd>
+      <dt>Engine</dt><dd>{{ ocr_name }} (local inference; initialised on first use)</dd>
+    </dl>
+    <form hx-post="/settings/check-ocr" hx-target="#ocr-status" hx-indicator="#oi">
+      <button type="submit" class="secondary">Check OCR engine</button>
+      <span id="oi" class="htmx-indicator">Initialising… the first run can take a while</span>
+    </form>
+    <div id="ocr-status" aria-live="polite"></div>
+  </section>
+</div>
+
+<section class="panel" aria-labelledby="ti-heading">
+  <div class="sec-h">
+    <h3 id="ti-heading">Threat intelligence</h3>
+    <span class="scope-chip scope-external">Opt-In Corroboration</span>
+  </div>
+  <dl class="kv">
+    <dt>Setting</dt><dd>{{ 'Enabled' if s.threat_intel_enabled else 'Disabled' }} (still opt-in for every analysis)</dd>
+    <dt>Provider</dt><dd>{{ ti.provider }}</dd>
+    <dt>API key</dt><dd>{{ 'Configured' if s.virustotal_configured else 'Not configured' }}</dd>
+    <dt>Note</dt><dd>{% if s.virustotal_configured and s.threat_intel_enabled %}Lookups send only the URL to {{ ti.provider }}, and only when you tick the box on an analysis.{% else %}Threat intelligence unavailable — local analysis only.{% endif %}</dd>
+  </dl>
+</section>
+
+<section class="panel" aria-labelledby="invariants-heading">
+  <div class="sec-h">
+    <h3 id="invariants-heading">Enforced Security Boundaries</h3>
+    <span class="scope-chip scope-local">Hardened Runtime</span>
+  </div>
+  <ul>
+    <li><strong>Non-Execution Invariant:</strong> Decoded URLs, Wi-Fi configs, UPI payment links, vCards, SMS/email bodies, USSD strings, and app deep links are treated strictly as passive data.</li>
+    <li><strong>Image Sanitization &amp; Bounds:</strong> Uploads are capped at {{ s.max_image_size_mb }} MB / {{ s.max_image_pixels }} pixels and re-encoded into clean PNG buffers to strip EXIF/metadata payloads.</li>
+    <li><strong>Strict Content-Security-Policy:</strong> Zero inline scripts, zero inline styles, zero third-party CDNs, and Same-Origin verification on all state-changing requests.</li>
+  </ul>
+</section>
+{% endblock %}

@@ -1,0 +1,6 @@
+version: "1.0.0"
+defaults: {family: ACTION, independent_group: action_sensitivity, layer: action, applicability: [url, wifi, payment, contact, sms, email, deep_link, plain_text]}
+rules:
+  - {id: ACT-001, title: Action sensitivity, category: action, severity: info,
+     description: "Qualitative sensitivity (low, medium, high) of the action the payload would initiate if executed.",
+     rationale: "Sensitivity measures how much harm an unintended execution could cause. It is a modifier of other evidence and is never proof of maliciousness: a payment QR code is not suspicious merely because payments are sensitive."}
