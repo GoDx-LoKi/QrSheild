@@ -164,7 +164,6 @@ qrshield/
 ├── CITATION.cff                       # Citation File Format metadata
 ├── CONTRIBUTING.md                    # Contribution & pull-request guidelines
 ├── SECURITY.md                        # Vulnerability disclosure & security invariants
-├── CHANGELOG.md                       # Release history & defect closure summary
 ├── DECISIONS.md                       # Architectural Decision Records (ADR-001..ADR-006)
 ├── Makefile                           # One-command verification harness (make verify)
 ├── pyproject.toml                     # Python package metadata, dependencies & tool config
