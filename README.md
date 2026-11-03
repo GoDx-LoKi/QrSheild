@@ -25,7 +25,6 @@ QRShield is a deterministic, local-first security analysis framework and benchma
 15. [Documentation Index](#15-documentation-index)
 16. [Contributing](#16-contributing)
 17. [License](#17-license)
-18. [Citation](#18-citation)
 
 ---
 
@@ -551,20 +550,3 @@ Contributions that improve payload parsers, declarative security rules, OCR robu
 ## 17. License
 
 Released under the **MIT License**. See [`LICENSE`](LICENSE) for full license text.
-
----
-
-## 18. Citation
-
-If you use QRShield or the `QRS-Bench-Ind` benchmark in academic research, please cite:
-
-```bibtex
-@article{shinde2026qrshield,
-  title   = {Beyond Quishing: Explainable Cross-Modal Context-Consistency Verification for Multi-Scheme QR Code Threats},
-  author  = {Shinde, Abhijit R. and Jadhav, Soham R. and Patil, Omkar R. and Kadam, Yash A.},
-  journal = {International Journal of Advance Multidisciplinary Research and Engineering Development (IJAMRED)},
-  volume  = {1},
-  number  = {4},
-  year    = {2026}
-}
-```
