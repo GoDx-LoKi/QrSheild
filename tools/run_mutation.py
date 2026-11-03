@@ -69,6 +69,22 @@ def apply_ast_mutation(tree: ast.Module, target_idx: int) -> ast.Module:
     return mut_tree
 
 
+def sync_imported_symbols(
+    orig_mod: Any,
+    test_files: list[str],
+    dependent_modules: list[Any],
+) -> None:
+    modules = list(dependent_modules)
+    for test_file in test_files:
+        test_module = sys.modules.get(Path(test_file).stem)
+        if test_module is not None:
+            modules.append(test_module)
+    for module in modules:
+        for symbol in ("decide", "Matcher"):
+            if hasattr(module, symbol) and hasattr(orig_mod, symbol):
+                setattr(module, symbol, getattr(orig_mod, symbol))
+
+
 def main() -> int:
     root = Path(__file__).resolve().parents[1]
     sys.path.insert(0, str(root / "source"))
@@ -117,13 +133,11 @@ def main() -> int:
         for node_idx, line_no, desc in sites:
             total_mutants += 1
             mut_tree = apply_ast_mutation(orig_tree, node_idx)
+            dependent_modules = [cons_mod, eng_mod]
             try:
                 code_obj = compile(mut_tree, str(file_path), "exec")
                 exec(code_obj, orig_mod.__dict__)
-                for dep_mod in (cons_mod, eng_mod):
-                    for sym in ("decide", "Matcher"):
-                        if hasattr(dep_mod, sym) and hasattr(orig_mod, sym):
-                            setattr(dep_mod, sym, getattr(orig_mod, sym))
+                sync_imported_symbols(orig_mod, test_files, dependent_modules)
                 buf = io.StringIO()
                 with contextlib.redirect_stdout(buf), contextlib.redirect_stderr(buf):
                     rc = active_pytest.main(test_files + ["-q"])
@@ -138,10 +152,7 @@ def main() -> int:
             finally:
                 orig_mod.__dict__.clear()
                 orig_mod.__dict__.update(orig_dict)
-                for dep_mod in (cons_mod, eng_mod):
-                    for sym in ("decide", "Matcher"):
-                        if hasattr(dep_mod, sym) and hasattr(orig_mod, sym):
-                            setattr(dep_mod, sym, getattr(orig_mod, sym))
+                sync_imported_symbols(orig_mod, test_files, dependent_modules)
 
         score = round(100.0 * mod_killed / len(sites), 2) if sites else 100.0
         per_module[mod_name] = {
